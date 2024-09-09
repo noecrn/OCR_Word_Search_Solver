@@ -1,5 +1,11 @@
 {
 	"files.associations": {
-		"sdl_image.h": "c"
+		"sdl_image.h": "c",
+		"image_loader.h": "c",
+		"image_utils.h": "c",
+		"sdl.h": "c",
+		"stdio.h": "c",
+		"stdlib.h": "c",
+		"bounding_boxes.h": "c"
 	}
 }
