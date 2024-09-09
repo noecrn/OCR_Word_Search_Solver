@@ -22,12 +22,9 @@ Ce projet consiste à développer une application capable de résoudre une grill
    ```
    git clone git@github.com:noecrn/OCR_Word_Search_Solver.git
    cd OCR_Word_Search_Solver
-```
 2. Compiler le projet avec le Makefile :
    ```
    make
-   ```
-
 ## Utilisation
 ### Résolution d'une grille en ligne de commande
 L'application dispose d'un programme de ligne de commande `solver` qui permet de résoudre une grille de mots cachés :
