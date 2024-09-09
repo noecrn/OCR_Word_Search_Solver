@@ -23,7 +23,7 @@ ifeq ($(OS),Windows_NT) # Windows
 endif
 
 # Source, object, and executable definitions
-SRC = utils/image_loader.c utils/image_utils.c main.c
+SRC = utils/image_loader.c utils/image_utils.c processing/bounding_boxes.c main.c
 OBJ = $(SRC:.c=.o)
 DEP = $(SRC:.c=.d)
 EXEC = main

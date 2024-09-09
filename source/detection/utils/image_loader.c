@@ -1,58 +1,37 @@
-#include <SDL.h>
-#include <SDL_image.h>
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_image.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <math.h>
-#include <err.h>
 
-Uint32** loadImageToMatrix(const char* filename, int* width, int* height);
+// Function to check if the image is binary (black and white)
+// int is_binary_image(SDL_Surface* image) {
+//     Uint32 black = SDL_MapRGB(image->format, 0, 0, 0);
+//     Uint32 white = SDL_MapRGB(image->format, 255, 255, 255);
 
-// Load an image into a matrix of pixels
-Uint32** loadImageToMatrix(const char* filename, int* width, int* height) {
-    // SDL initialization
-    if (SDL_Init(SDL_INIT_VIDEO) < 0) {
-        fprintf(stderr, "SDL could not initialize! SDL_Error: %s\n", SDL_GetError());
+//     for (int y = 0; y < image->h; ++y) {
+//         for (int x = 0; x < image->w; ++x) {
+//             Uint32 pixel = ((Uint32*)image->pixels)[y * image->pitch / 4 + x];
+//             if (pixel != black && pixel != white) {
+//                 return 0; // false
+//             }
+//         }
+//     }
+//     return 1; // true
+// }
+
+// Function to load an image
+SDL_Surface* load_image(const char* filename) {
+    SDL_Surface* image = IMG_Load(filename);
+    if (!image) {
+        fprintf(stderr, "IMG_Load Error: %s\n", IMG_GetError());
         return NULL;
     }
 
-    // SDL_image initialization
-    if (!(IMG_Init(IMG_INIT_PNG) & IMG_INIT_PNG)) {
-        fprintf(stderr, "SDL_image could not initialize! IMG_Error: %s\n", IMG_GetError());
-        SDL_Quit();
-        return NULL;
-    }
+    // if (!is_binary_image(image)) {
+    //     fprintf(stderr, "The image is not black and white\n");
+    //     SDL_FreeSurface(image);
+    //     return NULL;
+    // }
 
-    // Image loading
-    SDL_Surface* imageSurface = IMG_Load(filename);
-    if (!imageSurface) {
-        fprintf(stderr, "Unable to load image %s! IMG_Error: %s\n", filename, IMG_GetError());
-        IMG_Quit();
-        SDL_Quit();
-        return NULL;
-    }
-
-    // Get image dimensions
-    *width = imageSurface->w;
-    *height = imageSurface->h;
-
-    // Allocate memory for the matrix
-    Uint32** matrix = (Uint32**)malloc(*height * sizeof(Uint32*));
-    for (int i = 0; i < *height; ++i) {
-        matrix[i] = (Uint32*)malloc(*width * sizeof(Uint32));
-    }
-
-    // Copy image pixels to the matrix
-    Uint32* pixels = (Uint32*)imageSurface->pixels;
-    for (int y = 0; y < *height; ++y) {
-        for (int x = 0; x < *width; ++x) {
-            matrix[y][x] = pixels[(y * imageSurface->w) + x];
-        }
-    }
-
-    // Liberate resources
-    SDL_FreeSurface(imageSurface);
-    IMG_Quit();
-    SDL_Quit();
-
-    return matrix;
+    return image;
 }

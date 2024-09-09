@@ -1,8 +1,9 @@
 #ifndef IMAGE_LOADER_H
 #define IMAGE_LOADER_H
 
-#include <SDL.h>
+#include <SDL2/SDL.h>
 
-Uint32** loadImageToMatrix(const char* filename, int* width, int* height);
+int is_binary_image(SDL_Surface* image);
+SDL_Surface* load_image(const char* filename);
 
-#endif
+#endif // IMAGE_LOADER_H
