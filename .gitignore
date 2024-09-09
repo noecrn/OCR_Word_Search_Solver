@@ -15,9 +15,6 @@
 # Ignorer les fichiers de configuration de l'éditeur
 .vscode/
 
-# Ignorer les fichiers générés par Makefile
-Makefile
-
 # Ignorer les fichiers spécifiques au compilateur (exemple: GCC, Clang)
 *.gcno
 *.gcda
