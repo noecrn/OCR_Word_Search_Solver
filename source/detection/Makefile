@@ -1,9 +1,29 @@
 CC = gcc -fsanitize=address
-LIBS = `pkg-config --libs sdl2 SDL2_image` -lm
-CFLAGS = -Wall -Wextra -O3 `pkg-config --cflags sdl2 SDL2_image`
+CFLAGS = -Wall -Wextra -Werror -O3
+LIBS = -lm
+
+# Detection de l'OS
+UNAME_S := $(shell uname -s)
+
+ifeq ($(UNAME_S),Linux) # Linux
+    LIBS += `pkg-config --libs sdl2 SDL2_image`
+    CFLAGS += `pkg-config --cflags sdl2 SDL2_image`
+endif
+
+ifeq ($(UNAME_S),Darwin) # macOS
+    CC = clang -fsanitize=address
+    LIBS += `pkg-config --libs sdl2 SDL2_image`
+    CFLAGS += `pkg-config --cflags sdl2 SDL2_image` -arch arm64
+endif
+
+ifeq ($(OS),Windows_NT) # Windows
+    # Pour Windows, il faut généralement utiliser SDL2 avec MinGW ou MSYS2.
+    LIBS += -lSDL2 -lSDL2_image
+    CFLAGS += -I/mingw64/include/SDL2
+endif
 
 # Source, object, and executable definitions
-SRC = data/image_loader.c main.c
+SRC = utils/image_loader.c utils/image_utils.c main.c
 OBJ = $(SRC:.c=.o)
 DEP = $(SRC:.c=.d)
 EXEC = main
@@ -24,5 +44,3 @@ $(EXEC): $(OBJ)
 # Clean up build artifacts
 clean:
 	-rm -f $(OBJ) $(DEP) $(EXEC)
-
-# END
