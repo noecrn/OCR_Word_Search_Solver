@@ -1,27 +1,28 @@
-# Makefile
-
-CC=gcc -fsanitize=address
+CC = gcc -fsanitize=address
 LIBS = `pkg-config --libs sdl2 SDL2_image` -lm
 CFLAGS = -Wall -Wextra -O3 `pkg-config --cflags sdl2 SDL2_image`
 
-# You should at least create the "insert_sort.c"
-# and "insert_sort.h" files in order to compile.
-# (These files can be empty.)
-
+# Source, object, and executable definitions
 SRC = data/image_loader.c main.c
-OBJ = ${SRC:.c=.o}
-DEP = ${SRC:.c=.d}
+OBJ = $(SRC:.c=.o)
+DEP = $(SRC:.c=.d)
 EXEC = main
 
-all: main
+# Default target
+all: $(EXEC)
 
--include ${DEP}
+-include $(DEP)
 
-main: ${OBJ}
+# Linking the final executable
+$(EXEC): $(OBJ)
+	$(CC) $(CFLAGS) $(OBJ) -o $(EXEC) $(LIBS)
+
+# Compiling source files
+%.o: %.c
+	$(CC) $(CFLAGS) -MMD -c $< -o $@
 
 # Clean up build artifacts
 clean:
-	-rm -f *.o
-	-rm -f $(TARGET)
+	-rm -f $(OBJ) $(DEP) $(EXEC)
 
 # END
