@@ -22,8 +22,13 @@ ifeq ($(OS),Windows_NT) # Windows
     CFLAGS += -I/mingw64/include/SDL2
 endif
 
+# Source directories
+SRC_DIRS = utils processing
+
+# Find all .c files in the specified directories
+SRC = $(wildcard $(SRC_DIRS:=/*.c)) main.c
+
 # Source, object, and executable definitions
-SRC = utils/image_loader.c utils/image_utils.c processing/bounding_boxes.c main.c
 OBJ = $(SRC:.c=.o)
 DEP = $(SRC:.c=.d)
 EXEC = main

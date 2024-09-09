@@ -7,6 +7,7 @@
 
 void rotate_image(const char* inputPath, const char* outputPath, double angle);
 void resize_image(const char* inputPath, const char* outputPath, int minSideSize);
+void save_image(SDL_Surface* surface, const char* outputPath);
 
 // Function to rotate an image
 void rotate_image(const char* inputPath, const char* outputPath, double angle) {
@@ -141,4 +142,18 @@ void resize_image(const char* inputPath, const char* outputPath, int minSideSize
     // Quit SDL_image and SDL
     IMG_Quit();
     SDL_Quit();
+}
+
+// Function to save an SDL_Surface to a PNG file
+void save_image(SDL_Surface* surface, const char* outputPath) {
+    if (!surface) {
+        printf("Invalid surface\n");
+        return;
+    }
+
+    if (IMG_SavePNG(surface, outputPath) != 0) {
+        printf("IMG_SavePNG Error: %s\n", IMG_GetError());
+    } else {
+        printf("Image saved successfully to: %s\n", outputPath);
+    }
 }

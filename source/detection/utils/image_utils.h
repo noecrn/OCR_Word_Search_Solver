@@ -5,5 +5,6 @@
 
 void rotate_image(const char* inputPath, const char* outputPath, double angle);
 void resize_image(const char* inputPath, const char* outputPath, int minSideSize);
+void save_image(SDL_Surface* surface, const char* outputPath);
 
 #endif
