@@ -6,7 +6,8 @@
                 "${workspaceFolder}/**",
                 "/opt/homebrew/Cellar/sdl2/2.30.7/include",
                 "/opt/homebrew/Cellar/sdl2_image/2.8.2_1/include",
-                "/opt/homebrew/Cellar/sdl2/2.30.7/include/SDL2"
+                "/opt/homebrew/Cellar/sdl2/2.30.7/include/SDL2",
+                "/opt/homebrew/Cellar/sdl2_image/2.8.2_1/include/SDL2"
             ],
             "defines": [],
             "macFrameworkPath": [
