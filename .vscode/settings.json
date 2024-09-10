@@ -6,6 +6,7 @@
 		"sdl.h": "c",
 		"stdio.h": "c",
 		"stdlib.h": "c",
-		"bounding_boxes.h": "c"
+		"bounding_boxes.h": "c",
+		"image_draw.h": "c"
 	}
 }

@@ -9,17 +9,14 @@
 #include "processing/bounding_boxes.h"
 
 int main() {
+    SDL_Init(SDL_INIT_VIDEO);
     // resize_image("data/image-2.png", "temp_resized.png", 700);
     // rotate_image("data/image-2.png", "temp_rotated.png", 90);
-    SDL_Surface* image = load_image("data/image-2.png");
+    SDL_Surface* image = load_image("data/image-1.png");
     int min_x, min_y, max_x, max_y;
 
-    // Call the detect_boundaries function to get the letter boundaries
-    detect_boundaries(image, &min_x, &min_y, &max_x, &max_y);
-
-    // Print the boundary values
-    printf("Detected boundaries: min_x = %d, min_y = %d, max_x = %d, max_y = %d\n",
-           min_x, min_y, max_x, max_y);
+    // Appelle la fonction pour détecter la grille de lettres
+    detect_letter_grid(image, &min_x, &max_x, &min_y, &max_y);
 
     // Draw the boundaries on the image
     SDL_Color red = {255, 0, 0, 255};
@@ -28,9 +25,9 @@ int main() {
     draw_line(image, -1, min_y, red); // Draw a horizontal line at min_y
     draw_line(image, -1, max_y, red); // Draw a horizontal line at max_y
 
-    // Save the image with the boundaries drawn
     save_image(image, "output.png");
 
-    SDL_FreeSurface(image); // Free the surface when done
+    SDL_FreeSurface(image);
+    SDL_Quit();
     return 0;
 }

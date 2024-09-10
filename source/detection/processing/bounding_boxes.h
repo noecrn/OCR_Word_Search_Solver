@@ -3,6 +3,8 @@
 
 #include <SDL2/SDL.h>
 
-void detect_boundaries(SDL_Surface* surface, int* min_x, int* min_y, int* max_x, int* max_y);
+int is_black_pixel(Uint8 r, Uint8 g, Uint8 b);
+int count_black_pixels_in_block(SDL_Surface* surface, int start_x, int start_y);
+void detect_letter_grid(SDL_Surface* surface, int* left_bound, int* right_bound, int* top_bound, int* bottom_bound);
 
 #endif
