@@ -39,3 +39,29 @@ void draw_line(SDL_Surface *surface, int x, int y, SDL_Color color) {
         }
     }
 }
+
+// Function to draw the grid on an SDL surface
+void draw_grid(SDL_Surface* surface, int left_bound, int right_bound, int top_bound, int bottom_bound, int num_rows, int num_cols) {
+    SDL_Color blue = {0, 0, 255, 255}; // Blue color for the grid lines
+
+    int block_width = (right_bound - left_bound) / num_cols;
+    int block_height = (bottom_bound - top_bound) / num_rows;
+
+    // Draw vertical lines
+    for (int col = 0; col <= num_cols; col++) {
+        int x = left_bound + col * block_width;
+        for (int y = top_bound; y <= bottom_bound; y++) {
+            Uint32* pixels = (Uint32*)surface->pixels;
+            pixels[(y * surface->pitch / 4) + x] = SDL_MapRGBA(surface->format, blue.r, blue.g, blue.b, blue.a);
+        }
+    }
+
+    // Draw horizontal lines
+    for (int row = 0; row <= num_rows; row++) {
+        int y = top_bound + row * block_height;
+        for (int x = left_bound; x <= right_bound; x++) {
+            Uint32* pixels = (Uint32*)surface->pixels;
+            pixels[(y * surface->pitch / 4) + x] = SDL_MapRGBA(surface->format, blue.r, blue.g, blue.b, blue.a);
+        }
+    }
+}

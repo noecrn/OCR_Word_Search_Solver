@@ -2,6 +2,7 @@
 #include <stdio.h>
 
 #include "bounding_boxes.h"
+#include "../utils/image_draw.h"
 
 #define BLOCK_SIZE 5        // Taille de chaque bloc (10x10 pixels)
 #define BLACK_TOLERANCE 1   // Tolérance pour la détection des pixels noirs
@@ -75,8 +76,4 @@ void analyze_grid(SDL_Surface* surface, int left_bound, int right_bound, int top
 
     // Détecter le nombre de lignes avec les nouvelles règles
     *row_count = detect_rows(surface, left_bound, right_bound, top_bound, bottom_bound);
-
-    // Affiche les résultats
-    printf("Nombre de colonnes détectées: %d\n", *column_count);
-    printf("Nombre de lignes détectées: %d\n", *row_count);
 }

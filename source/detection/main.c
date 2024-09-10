@@ -1,5 +1,3 @@
-#include <stdio.h>
-#include <stdlib.h>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 
@@ -23,23 +21,36 @@ int main() {
     detect_letter_grid(image, &min_x, &max_x, &min_y, &max_y);
     detect_letter_grid(image_, &min_x_, &max_x_, &min_y_, &max_y_);
 
-    // // Draw the boundaries on the image
-    SDL_Color red = {255, 0, 0, 255};
-    draw_line(image, min_x, -1, red); // Draw a vertical line at min_x
-    draw_line(image, max_x, -1, red); // Draw a vertical line at max_x
-    draw_line(image, -1, min_y, red); // Draw a horizontal line at min_y
-    draw_line(image, -1, max_y, red); // Draw a horizontal line at max_y
+    // Dilater la taille de la grille de 10 pixels
+    int dilation = 20;
+    min_x = (min_x - dilation >= 0) ? min_x - dilation : 0;
+    min_y = (min_y - dilation >= 0) ? min_y - dilation : 0;
+    max_x = (max_x + dilation < image->w) ? max_x + dilation : image->w - 1;
+    max_y = (max_y + dilation < image->h) ? max_y + dilation : image->h - 1;
 
-    draw_line(image_, min_x_, -1, red); // Draw a vertical line at min_x
-    draw_line(image_, max_x_, -1, red); // Draw a vertical line at max_x
-    draw_line(image_, -1, min_y_, red); // Draw a horizontal line at min_y
-    draw_line(image_, -1, max_y_, red); // Draw a horizontal line at max_y
+    min_x_ = (min_x_ - dilation >= 0) ? min_x_ - dilation : 0;
+    min_y_ = (min_y_ - dilation >= 0) ? min_y_ - dilation : 0;
+    max_x_ = (max_x_ + dilation < image_->w) ? max_x_ + dilation : image_->w - 1;
+    max_y_ = (max_y_ + dilation < image_->h) ? max_y_ + dilation : image_->h - 1;
 
-    // analyze_grid(image, min_x, max_x, min_y, max_y, &min_x, &max_x);
-    // analyze_grid(image_, min_x_, max_x_, min_y_, max_y_, &min_x_, &max_x_);
+    int num_rows, num_cols;
+    analyze_grid(image, min_x, max_x, min_y, max_y, &num_cols, &num_rows);
+    int num_rows_, num_cols_;
+    analyze_grid(image_, min_x_, max_x_, min_y_, max_y_, &num_cols_, &num_rows_);
 
-    analyze_grid(image, min_x, max_x, min_y, max_y, &min_x, &max_x);
-    analyze_grid(image_, min_x_, max_x_, min_y_, max_y_, &min_x_, &max_x_);
+    printf("Grid size: %dx%d\n", num_rows, num_cols);
+    printf("Grid size: %dx%d\n", num_rows_, num_cols_);
+
+    printf("Grid bounds: (%d, %d) - (%d, %d)\n", min_x, min_y, max_x, max_y);
+    printf("Grid bounds: (%d, %d) - (%d, %d)\n", min_x_, min_y_, max_x_, max_y_);
+
+    // Recharger l'image pour dessiner la grille
+    image = load_image("temp_resized.png");
+    image_ = load_image("temp_resized_.png");
+
+    // Dessine la grille sur l'image
+    draw_grid(image, min_x, max_x, min_y, max_y, num_rows, num_cols);
+    draw_grid(image_, min_x_, max_x_, min_y_, max_y_, num_rows_, num_cols_);
 
     save_image(image, "output.png");
     save_image(image_, "output_.png");

@@ -131,8 +131,6 @@ void resize_image(const char* inputPath, const char* outputPath, int minSideSize
     // Save the resized image to the output path
     if (IMG_SavePNG(resizedImage, outputPath) != 0) {
         printf("IMG_SavePNG Error: %s\n", IMG_GetError());
-    } else {
-        printf("Image saved successfully to: %s\n", outputPath);
     }
 
     // Free the surfaces
@@ -153,7 +151,5 @@ void save_image(SDL_Surface* surface, const char* outputPath) {
 
     if (IMG_SavePNG(surface, outputPath) != 0) {
         printf("IMG_SavePNG Error: %s\n", IMG_GetError());
-    } else {
-        printf("Image saved successfully to: %s\n", outputPath);
     }
 }
