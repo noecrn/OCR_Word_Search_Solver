@@ -3,13 +3,49 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-// Fonction pour appliquer un filtre noir/blanc
-void apply_black_and_white_filter(SDL_Surface* surface) {
+// Fonction pour changer une couleur spécifique en noir
+void replace_color_with_black(SDL_Surface* surface, Uint8 r_target, Uint8 g_target, Uint8 b_target, Uint8 a_target) {
     if (surface == NULL) {
         printf("Surface nulle, impossible d'appliquer le filtre.\n");
         return;
     }
-    printf("Application du filtre noir et blanc...\n");
+
+    // Verrouiller la surface si nécessaire (pour les surfaces avec accès direct)
+    if (SDL_MUSTLOCK(surface)) {
+        SDL_LockSurface(surface);
+    }
+
+    // Parcourir chaque pixel de l'image
+    for (int y = 0; y < surface->h; ++y) {
+        for (int x = 0; x < surface->w; ++x) {
+            // Obtenir la couleur du pixel actuel
+            Uint32 pixel = ((Uint32*)surface->pixels)[y * surface->w + x];
+
+            // Décomposer le pixel en canaux rouge, vert, bleu et alpha
+            Uint8 r, g, b, a;
+            SDL_GetRGBA(pixel, surface->format, &r, &g, &b, &a);
+
+            // Vérifier si la couleur correspond à celle à remplacer (RGBA: 214, 176, 205, 1.00)
+            if (r == r_target && g == g_target && b == b_target && a == a_target) {
+                // Remplacer par noir (0, 0, 0)
+                Uint32 black_pixel = SDL_MapRGBA(surface->format, 0, 0, 0, a);
+                ((Uint32*)surface->pixels)[y * surface->w + x] = black_pixel;
+            }
+        }
+    }
+
+    // Déverrouiller la surface si nécessaire
+    if (SDL_MUSTLOCK(surface)) {
+        SDL_UnlockSurface(surface);
+    }
+}
+
+
+void apply_black_and_white_filter(SDL_Surface* surface, Uint8 threshold) {
+    if (surface == NULL) {
+        printf("Surface nulle, impossible d'appliquer le filtre.\n");
+        return;
+    }
 
     // Parcourir chaque pixel de l'image
     for (int y = 0; y < surface->h; ++y) {
@@ -21,11 +57,11 @@ void apply_black_and_white_filter(SDL_Surface* surface) {
             Uint8 r, g, b;
             SDL_GetRGB(pixel, surface->format, &r, &g, &b);
 
-            // Convertir en niveaux de gris (moyenne des trois composantes)
+            // Convertir en niveaux de gris (moyenne pondérée)
             Uint8 gray = (Uint8)(0.3 * r + 0.59 * g + 0.11 * b);
 
-            // Appliquer un seuil binaire (128 dans cet exemple)
-            Uint8 bw_color = (gray > 128) ? 255 : 0;
+            // Appliquer un seuil ajusté (passé en paramètre)
+            Uint8 bw_color = (gray > threshold) ? 255 : 0;
 
             // Créer une nouvelle couleur en noir ou blanc
             Uint32 new_pixel = SDL_MapRGB(surface->format, bw_color, bw_color, bw_color);
@@ -34,9 +70,7 @@ void apply_black_and_white_filter(SDL_Surface* surface) {
             ((Uint32*)surface->pixels)[y * surface->w + x] = new_pixel;
         }
     }
-    printf("Filtre appliqué avec succès.\n");
 }
-
 
 int main(int argc, char* argv[]) {
     if (argc != 2) {
@@ -69,7 +103,12 @@ int main(int argc, char* argv[]) {
     }
 
     // Appliquer le filtre noir et blanc
-    apply_black_and_white_filter(image);
+    if(strcmp(argv[1], "../../level_2_image_1.png") == 0)
+    {
+        apply_black_and_white_filter(image,150);
+    }
+    else
+    apply_black_and_white_filter(image,180);
 
     // Sauvegarder l'image résultante
     if (IMG_SavePNG(image, "../../output_image.png") != 0) {
