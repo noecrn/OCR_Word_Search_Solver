@@ -5,10 +5,6 @@
 #include <math.h>
 #include <err.h>
 
-void rotate_image(const char* inputPath, const char* outputPath, double angle);
-void resize_image(const char* inputPath, const char* outputPath, int minSideSize);
-void save_image(SDL_Surface* surface, const char* outputPath);
-
 // Function to rotate an image
 void rotate_image(const char* inputPath, const char* outputPath, double angle) {
     if (SDL_Init(SDL_INIT_VIDEO) != 0) {
@@ -140,6 +136,62 @@ void resize_image(const char* inputPath, const char* outputPath, int minSideSize
     // Quit SDL_image and SDL
     IMG_Quit();
     SDL_Quit();
+}
+
+// Function to resize an image to a square of a target size
+void resize_image_square(const char* inputPath, const char* outputPath, int targetSize) {
+    // Load the input image
+    SDL_Surface* original_image = IMG_Load(inputPath);
+    if (!original_image) {
+        fprintf(stderr, "Error loading image: %s\n", IMG_GetError());
+        return;
+    }
+
+    // Get original image dimensions
+    int original_width = original_image->w;
+    int original_height = original_image->h;
+
+    // Calculate the scaling factor to fit the image into a targetSize x targetSize square
+    float scaling_factor;
+    if (original_width > original_height) {
+        scaling_factor = (float)targetSize / original_width;
+    } else {
+        scaling_factor = (float)targetSize / original_height;
+    }
+
+    // Calculate the new width and height, preserving the aspect ratio
+    int new_width = (int)(original_width * scaling_factor);
+    int new_height = (int)(original_height * scaling_factor);
+
+    // Create a new surface for the resized image
+    SDL_Surface* resized_image = SDL_CreateRGBSurfaceWithFormat(0, targetSize, targetSize, 32, original_image->format->format);
+    if (!resized_image) {
+        fprintf(stderr, "Error creating resized surface: %s\n", SDL_GetError());
+        SDL_FreeSurface(original_image);
+        return;
+    }
+
+    // Fill the new surface with a white background (RGB: 255, 255, 255)
+    SDL_FillRect(resized_image, NULL, SDL_MapRGB(resized_image->format, 255, 255, 255));
+
+    // Create a destination rectangle to center the scaled image in the square
+    SDL_Rect dest_rect;
+    dest_rect.x = (targetSize - new_width) / 2;  // Center horizontally
+    dest_rect.y = (targetSize - new_height) / 2; // Center vertically
+    dest_rect.w = new_width;
+    dest_rect.h = new_height;
+
+    // Scale and blit the original image onto the resized image
+    SDL_BlitScaled(original_image, NULL, resized_image, &dest_rect);
+
+    // Save the resized image to the output path
+    if (IMG_SavePNG(resized_image, outputPath) != 0) {
+        fprintf(stderr, "Error saving image: %s\n", IMG_GetError());
+    }
+
+    // Free the surfaces
+    SDL_FreeSurface(original_image);
+    SDL_FreeSurface(resized_image);
 }
 
 // Function to save an SDL_Surface to a PNG file

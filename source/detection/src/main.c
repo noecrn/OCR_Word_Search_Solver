@@ -12,12 +12,12 @@
 
 int main() {
     SDL_Init(SDL_INIT_VIDEO);
-    resize_image(IMAGE, "temp_resized.png", 700);
+    resize_image(IMAGE, "output/temp_resized.png", 700);
     // rotate_image("data/image-2.png", "temp_rotated.png", 90);
-    SDL_Surface* image = load_image("temp_resized.png");
-    int min_x, min_y, max_x, max_y;
+    SDL_Surface* image = load_image(IMAGE);
 
     // Appelle la fonction pour détecter la grille de lettres
+    int min_x, min_y, max_x, max_y;
     detect_letter_grid(image, &min_x, &max_x, &min_y, &max_y);
 
     // Dilater la taille de la grille de 10 pixels
@@ -29,10 +29,6 @@ int main() {
 
     int num_rows, num_cols;
     analyze_grid(image, min_x, max_x, min_y, max_y, &num_cols, &num_rows);
-
-    printf("Grid size: %dx%d\n", num_rows, num_cols);
-
-    printf("Grid bounds: (%d, %d) - (%d, %d)\n", min_x, min_y, max_x, max_y);
 
     // Recharger l'image pour dessiner la grille
     image = load_image("temp_resized.png");
