@@ -2,7 +2,7 @@ CC = gcc -fsanitize=address
 CFLAGS = -Wall -Wextra -Werror -O3
 LIBS = -lm
 
-# Detection de l'OS
+# OS-specific configuration
 UNAME_S := $(shell uname -s)
 
 ifeq ($(UNAME_S),Linux) # Linux
@@ -17,16 +17,15 @@ ifeq ($(UNAME_S),Darwin) # macOS
 endif
 
 ifeq ($(OS),Windows_NT) # Windows
-    # Pour Windows, il faut généralement utiliser SDL2 avec MinGW ou MSYS2.
     LIBS += -lSDL2 -lSDL2_image
     CFLAGS += -I/mingw64/include/SDL2
 endif
 
 # Source directories
-SRC_DIRS = utils processing
+SRC_DIRS = src
 
 # Find all .c files in the specified directories
-SRC = $(wildcard $(SRC_DIRS:=/*.c)) main.c
+SRC = $(wildcard $(SRC_DIRS:=/*.c))
 
 # Source, object, and executable definitions
 OBJ = $(SRC:.c=.o)
