@@ -1,7 +1,7 @@
 #include <SDL.h>
 #include <stdio.h>
 
-#define BLOCK_SIZE 10        // Taille de chaque bloc (10x10 pixels)
+#define BLOCK_SIZE 15        // Taille de chaque bloc (10x10 pixels)
 #define BLACK_TOLERANCE 1   // Tolérance pour la détection des pixels noirs
 #define WHITE_THRESHOLD 0    // Seuil maximum de pixels noirs pour un bloc blanc
 #define SPACE_THRESHOLD 4    // Nombre maximal de blocs blancs d'affilée
@@ -87,9 +87,9 @@ void detect_letter_grid(SDL_Surface* surface, int* left_bound, int* right_bound,
             if (black_pixel_count > WHITE_THRESHOLD) {
                 consecutive_white_blocks = 0;
                 if (x + BLOCK_SIZE < width) {
-                    *right_bound = x + BLOCK_SIZE;
+                    *right_bound = x + BLOCK_SIZE > *right_bound ? x + BLOCK_SIZE : *right_bound;
                 } else {
-                    *right_bound = x;
+                    *right_bound = x > *right_bound ? x : *right_bound;
                 }
             } else {
                 consecutive_white_blocks++;
@@ -121,9 +121,9 @@ void detect_letter_grid(SDL_Surface* surface, int* left_bound, int* right_bound,
             if (black_pixel_count > WHITE_THRESHOLD) {
                 consecutive_white_blocks = 0;
                 if (y + BLOCK_SIZE < height) {
-                    *bottom_bound = y + BLOCK_SIZE;
+                    *bottom_bound = y + BLOCK_SIZE > *bottom_bound ? y + BLOCK_SIZE : *bottom_bound;
                 } else {
-                    *bottom_bound = y;
+                    *bottom_bound = y > *bottom_bound ? y : *bottom_bound;
                 }
             } else {
                 consecutive_white_blocks++;
