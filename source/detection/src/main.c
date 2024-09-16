@@ -4,8 +4,9 @@
 #include "../include/bounding_boxes.h"
 #include "../include/line_detection.h"
 #include "../include/lettre_extraction.h"
+#include "../include/border_dilatation.h"
 
-#define IMAGE "data/IMG_2.png"
+#define IMAGE "data/IMG_3.png"
 
 int main() {
     SDL_Init(SDL_INIT_VIDEO);
@@ -17,12 +18,7 @@ int main() {
     int left, right, top, bottom;
     detect_letter_grid(image, &left, &right, &top, &bottom);
 
-    // // Dilater la taille de la grille de 10 pixels
-    // int dilation = 15;
-    // left = (left - dilation > 0) ? left - dilation : 1;
-    // right = (right + dilation < image->w) ? right + dilation : image->w - 1;
-    // top = (top - dilation > 0) ? top - dilation : 1;
-    // bottom = (bottom + dilation < image->h) ? bottom + dilation : image->h - 1;
+    check_and_dilate_borders(image, &left, &right, &top, &bottom);
 
     // Dessine les bordures de la grille
     draw_line(image, -1, top, (SDL_Color){255, 0, 0, 255});

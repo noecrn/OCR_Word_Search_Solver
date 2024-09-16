@@ -5,7 +5,7 @@
 #define BLOCK_SIZE 15        // Taille de chaque bloc (10x10 pixels)
 #define BLACK_TOLERANCE 1   // Tolérance pour la détection des pixels noirs
 #define WHITE_THRESHOLD 0    // Seuil maximum de pixels noirs pour un bloc blanc
-#define SPACE_THRESHOLD 3    // Nombre maximal de blocs blancs d'affilée
+#define SPACE_THRESHOLD 4    // Nombre maximal de blocs blancs d'affilée
 
 // Function to check if a pixel is black based on a tolerance value
 int is_black_pixel(Uint8 r, Uint8 g, Uint8 b) {
