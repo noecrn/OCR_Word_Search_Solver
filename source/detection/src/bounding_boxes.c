@@ -1,10 +1,11 @@
 #include <SDL.h>
 #include <stdio.h>
+#include "../include/rendering.h"
 
 #define BLOCK_SIZE 15        // Taille de chaque bloc (10x10 pixels)
 #define BLACK_TOLERANCE 1   // Tolérance pour la détection des pixels noirs
 #define WHITE_THRESHOLD 0    // Seuil maximum de pixels noirs pour un bloc blanc
-#define SPACE_THRESHOLD 4    // Nombre maximal de blocs blancs d'affilée
+#define SPACE_THRESHOLD 3    // Nombre maximal de blocs blancs d'affilée
 
 // Function to check if a pixel is black based on a tolerance value
 int is_black_pixel(Uint8 r, Uint8 g, Uint8 b) {
@@ -14,7 +15,6 @@ int is_black_pixel(Uint8 r, Uint8 g, Uint8 b) {
 // Fonction pour compter les pixels noirs dans un bloc de taille BLOCK_SIZE x BLOCK_SIZE
 int count_black_pixels_in_block(SDL_Surface* surface, int start_x, int start_y) {
     int count_black = 0;
-    Uint32 red_pixel = SDL_MapRGBA(surface->format, 255, 0, 0, 255); // Rouge
 
     // Limite le bloc à l'intérieur des dimensions de l'image
     for (int y = start_y; y < start_y + BLOCK_SIZE && y < surface->h; y++) {
@@ -27,13 +27,12 @@ int count_black_pixels_in_block(SDL_Surface* surface, int start_x, int start_y) 
             if (is_black_pixel(r, g, b)) {
                 count_black++;
             }
-
-            // Dessiner les bords en rouge
-            if (x == start_x || x == start_x + BLOCK_SIZE - 1 || y == start_y || y == start_y + BLOCK_SIZE - 1) {
-                ((Uint32*)surface->pixels)[y * surface->pitch / 4 + x] = red_pixel;
-            }
         }
     }
+
+    // Draw the border around the block
+    // draw_square(surface, start_x, start_y, BLOCK_SIZE, (SDL_Color){0, 0, 255, 255});
+
     return count_black;
 }
 
@@ -78,6 +77,13 @@ void detect_letter_grid(SDL_Surface* surface, int* left_bound, int* right_bound,
                 if (consecutive_white_blocks >= SPACE_THRESHOLD) break;
             }
         }
+    }
+
+    for (int i = 0; i < 5; i++) {
+        int start_x = start_points[i][0];
+        int start_y = start_points[i][1];
+
+        int consecutive_white_blocks = 0;
 
         // Propagation vers la droite
         consecutive_white_blocks = 0;
@@ -96,6 +102,13 @@ void detect_letter_grid(SDL_Surface* surface, int* left_bound, int* right_bound,
                 if (consecutive_white_blocks >= SPACE_THRESHOLD) break;
             }
         }
+    }
+
+    for (int i = 0; i < 5; i++) {
+        int start_x = start_points[i][0];
+        int start_y = start_points[i][1];
+
+        int consecutive_white_blocks = 0;
 
         // Propagation vers le haut
         consecutive_white_blocks = 0;
@@ -112,6 +125,13 @@ void detect_letter_grid(SDL_Surface* surface, int* left_bound, int* right_bound,
                 if (consecutive_white_blocks >= SPACE_THRESHOLD) break;
             }
         }
+    }
+
+    for (int i = 0; i < 5; i++) {
+        int start_x = start_points[i][0];
+        int start_y = start_points[i][1];
+
+        int consecutive_white_blocks = 0;
 
         // Propagation vers le bas
         consecutive_white_blocks = 0;

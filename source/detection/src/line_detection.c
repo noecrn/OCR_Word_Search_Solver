@@ -7,18 +7,13 @@
 #define BLOCK_SIZE 15        // Taille de chaque bloc (15x15 pixels)
 #define BLACK_TOLERANCE 1    // Tolérance pour la détection des pixels noirs
 #define WHITE_THRESHOLD 0    // Seuil maximum de pixels noirs pour un bloc blanc
-#define SPACE_THRESHOLD 2    // Nombre maximal de blocs blancs d'affilée
+#define SPACE_THRESHOLD 0    // Nombre maximal de blocs blancs d'affilée
 
 // Fonction modifiée pour détecter le nombre de colonnes
 int detect_columns(SDL_Surface* surface, int left_bound, int right_bound, int top_bound, int bottom_bound) {
     int column_count = 0;                 // Nombre de colonnes détectées
     int in_black_column = 0;              // Indicateur pour savoir si on est dans une colonne avec des pixels noirs
 
-    printf("left_bound: %d\n", left_bound);
-    printf("right_bound: %d\n", right_bound);
-    printf("top_bound: %d\n", top_bound);
-    printf("bottom_bound: %d\n", bottom_bound);
-    
     // Parcourt de gauche à droite sur les colonnes
     for (int x = left_bound; x <= right_bound; x += BLOCK_SIZE) {
         int black_pixel_count = 0;
@@ -30,17 +25,16 @@ int detect_columns(SDL_Surface* surface, int left_bound, int right_bound, int to
 
         // Si cette colonne contient des pixels noirs
         if (black_pixel_count > WHITE_THRESHOLD) {
+            draw_square(surface, x, top_bound, BLOCK_SIZE, (SDL_Color){0, 0, 255, 255});
             if (!in_black_column) {
                 // Si on n'était pas déjà dans une colonne noire, on en compte une nouvelle
                 column_count++;
                 in_black_column = 1;  // On est maintenant dans une colonne noire
-                printf("black column detected\n");
             }
         } else {
             // Si la colonne est blanche (peu ou pas de pixels noirs)
             in_black_column = 0;  // On sort d'une colonne noire
         }
-        printf("is black column: %d\n", in_black_column);
     }
 
     return column_count;
@@ -58,9 +52,6 @@ int detect_rows(SDL_Surface* surface, int left_bound, int right_bound, int top_b
         // Compte le nombre de pixels noirs dans cette ligne
         for (int x = left_bound; x <= right_bound; x += BLOCK_SIZE) {
             black_pixel_count += count_black_pixels_in_block(surface, x, y);
-
-            // Draw square around the block
-            draw_square(surface, x, y, BLOCK_SIZE, (SDL_Color){255, 0, 0, 255});
         }
 
         // Si cette ligne contient des pixels noirs
@@ -86,8 +77,4 @@ void analyze_grid(SDL_Surface* surface, int left_bound, int right_bound, int top
 
     // Détecter le nombre de lignes avec les nouvelles règles
     *row_count = detect_rows(surface, left_bound, right_bound, top_bound, bottom_bound);
-
-
-    printf("Nombre de lignes: %d\n", *row_count);
-    printf("Nombre de colonnes: %d\n", *column_count);
 }

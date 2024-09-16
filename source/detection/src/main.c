@@ -5,7 +5,7 @@
 #include "../include/line_detection.h"
 #include "../include/lettre_extraction.h"
 
-#define IMAGE "data/image-2.png"
+#define IMAGE "data/IMG_2.png"
 
 int main() {
     SDL_Init(SDL_INIT_VIDEO);
@@ -17,12 +17,12 @@ int main() {
     int left, right, top, bottom;
     detect_letter_grid(image, &left, &right, &top, &bottom);
 
-    // Dilater la taille de la grille de 10 pixels
-    int dilation = 15;
-    left = (left - dilation > 0) ? left - dilation : 1;
-    right = (right + dilation < image->w) ? right + dilation : image->w - 1;
-    top = (top - dilation > 0) ? top - dilation : 1;
-    bottom = (bottom + dilation < image->h) ? bottom + dilation : image->h - 1;
+    // // Dilater la taille de la grille de 10 pixels
+    // int dilation = 15;
+    // left = (left - dilation > 0) ? left - dilation : 1;
+    // right = (right + dilation < image->w) ? right + dilation : image->w - 1;
+    // top = (top - dilation > 0) ? top - dilation : 1;
+    // bottom = (bottom + dilation < image->h) ? bottom + dilation : image->h - 1;
 
     // Dessine les bordures de la grille
     draw_line(image, -1, top, (SDL_Color){255, 0, 0, 255});
@@ -30,10 +30,9 @@ int main() {
     draw_line(image, right, -1, (SDL_Color){255, 0, 0, 255});
     draw_line(image, left, -1, (SDL_Color){255, 0, 0, 255});
 
-    image = load_image("output/temp_resized.png");
-
-    int num_rows, num_cols;
-    analyze_grid(image, left, right, top, bottom, &num_cols, &num_rows);
+    // int num_rows, num_cols;
+    // analyze_grid(image, &left, &right, &top, &bottom, &num_cols, &num_rows);
+    // printf("%d %d\n", num_rows, num_cols);
 
     // // Recharger l'image pour dessiner la grille
     // image = load_image("temp_resized.png");
