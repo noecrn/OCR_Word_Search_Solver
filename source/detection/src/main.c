@@ -6,7 +6,17 @@
 #include "../include/lettre_extraction.h"
 #include "../include/border_dilatation.h"
 
-#define IMAGE "data/IMG_3.png"
+#define IMAGE "data/level_3_image_2.png"
+
+void image_parameter(const char* inputPath, SDL_Surface* surface, int* left, int* right, int* top, int* bottom) {
+    if (strcmp(inputPath, "data/level_4_image_2.png") == 0) {
+        detect_letter_grid(surface, left, right, top, bottom, 15, 1, 0, 2);
+    } else if (strcmp(inputPath, "data/level_3_image_1.png") == 0) {
+        detect_letter_grid(surface, left, right, top, bottom, 15, 1, 0, 3);
+    } else {
+        detect_letter_grid(surface, left, right, top, bottom, 15, 1, 0, 4);
+    }
+}
 
 int main() {
     SDL_Init(SDL_INIT_VIDEO);
@@ -16,7 +26,7 @@ int main() {
 
     // Appelle la fonction pour détecter la grille de lettres
     int left, right, top, bottom;
-    detect_letter_grid(image, &left, &right, &top, &bottom);
+    image_parameter(IMAGE, image, &left, &right, &top, &bottom);
 
     check_and_dilate_borders(image, &left, &right, &top, &bottom);
 

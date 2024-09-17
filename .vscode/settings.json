@@ -9,6 +9,7 @@
 		"bounding_boxes.h": "c",
 		"image_draw.h": "c",
 		"image_processing.h": "c",
-		"rendering.h": "c"
+		"rendering.h": "c",
+		"border_dilatation.h": "c"
 	}
 }

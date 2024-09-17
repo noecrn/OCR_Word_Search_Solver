@@ -13,7 +13,7 @@ int has_black_pixels_on_line(SDL_Surface* surface, int y, int left, int right) {
         Uint8 r, g, b, a;
         SDL_GetRGBA(pixel, surface->format, &r, &g, &b, &a);
 
-        if (is_black_pixel(r, g, b)) {
+        if (is_black_pixel(r, g, b, BLACK_TOLERANCE)) {
             return 1; // Pixel noir trouvé
         }
     }
@@ -28,7 +28,7 @@ int has_black_pixels_on_column(SDL_Surface* surface, int x, int top, int bottom)
         Uint8 r, g, b, a;
         SDL_GetRGBA(pixel, surface->format, &r, &g, &b, &a);
 
-        if (is_black_pixel(r, g, b)) {
+        if (is_black_pixel(r, g, b, BLACK_TOLERANCE)) {
             return 1; // Pixel noir trouvé
         }
     }
