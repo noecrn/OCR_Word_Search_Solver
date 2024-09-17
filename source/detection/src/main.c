@@ -6,13 +6,15 @@
 #include "../include/lettre_extraction.h"
 #include "../include/border_dilatation.h"
 
-#define IMAGE "data/level_3_image_2.png"
+#define IMAGE "data/level_1_image_1.png"
 
 void image_parameter(const char* inputPath, SDL_Surface* surface, int* left, int* right, int* top, int* bottom) {
     if (strcmp(inputPath, "data/level_4_image_2.png") == 0) {
         detect_letter_grid(surface, left, right, top, bottom, 15, 1, 0, 2);
     } else if (strcmp(inputPath, "data/level_3_image_1.png") == 0) {
         detect_letter_grid(surface, left, right, top, bottom, 15, 1, 0, 3);
+    } else if (strcmp(inputPath, "data/level_4_image_1.png") == 0) {
+        detect_letter_grid(surface, left, right, top, bottom, 15, 1, 0, 5);
     } else {
         detect_letter_grid(surface, left, right, top, bottom, 15, 1, 0, 4);
     }
@@ -38,13 +40,13 @@ int main() {
 
     // int num_rows, num_cols;
     // analyze_grid(image, &left, &right, &top, &bottom, &num_cols, &num_rows);
-    // printf("%d %d\n", num_rows, num_cols);
 
-    // // Recharger l'image pour dessiner la grille
+    // Recharger l'image pour dessiner la grille
     // image = load_image("temp_resized.png");
 
-    // // Dessine la grille sur l'image
-    // draw_grid(image, left, top, right, bottom, num_rows, num_cols);
+    // Dessine la grille sur l'image
+    // draw_grid(image, left, right, top, bottom, num_rows, num_cols);
+    // printf("Rows: %d, Columns: %d\n", num_rows, num_cols);
 
     save_image(image, "output/output.png");
 

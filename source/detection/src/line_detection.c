@@ -4,7 +4,7 @@
 #include "../include/bounding_boxes.h"
 #include "../include/rendering.h"
 
-#define BLOCK_SIZE 15        // Taille de chaque bloc (15x15 pixels)
+#define BLOCK_SIZE 5        // Taille de chaque bloc (5x5 pixels)
 #define BLACK_TOLERANCE 1    // Tolérance pour la détection des pixels noirs
 #define WHITE_THRESHOLD 0    // Seuil maximum de pixels noirs pour un bloc blanc
 #define SPACE_THRESHOLD 0    // Nombre maximal de blocs blancs d'affilée
@@ -25,7 +25,6 @@ int detect_columns(SDL_Surface* surface, int left_bound, int right_bound, int to
 
         // Si cette colonne contient des pixels noirs
         if (black_pixel_count > WHITE_THRESHOLD) {
-            draw_square(surface, x, top_bound, BLOCK_SIZE, (SDL_Color){0, 0, 255, 255});
             if (!in_black_column) {
                 // Si on n'était pas déjà dans une colonne noire, on en compte une nouvelle
                 column_count++;
@@ -71,10 +70,10 @@ int detect_rows(SDL_Surface* surface, int left_bound, int right_bound, int top_b
 }
 
 // Fonction principale pour analyser la grille avec les nouvelles règles
-void analyze_grid(SDL_Surface* surface, int left_bound, int right_bound, int top_bound, int bottom_bound, int* column_count, int* row_count) {
+void analyze_grid(SDL_Surface* surface, int* left_bound, int* right_bound, int* top_bound, int* bottom_bound, int* column_count, int* row_count) {
     // Détecter le nombre de colonnes avec les nouvelles règles
-    *column_count = detect_columns(surface, left_bound, right_bound, top_bound, bottom_bound);
+    *column_count = detect_columns(surface, *left_bound, *right_bound, *top_bound, *bottom_bound);
 
     // Détecter le nombre de lignes avec les nouvelles règles
-    *row_count = detect_rows(surface, left_bound, right_bound, top_bound, bottom_bound);
+    *row_count = detect_rows(surface, *left_bound, *right_bound, *top_bound, *bottom_bound);
 }

@@ -44,26 +44,29 @@ void draw_line(SDL_Surface *surface, int x, int y, SDL_Color color) {
 void draw_grid(SDL_Surface* surface, int left_bound, int right_bound, int top_bound, int bottom_bound, int num_rows, int num_cols) {
     SDL_Color blue = {0, 0, 255, 255}; // Blue color for the grid lines
 
-    int block_width = (right_bound - left_bound) / num_cols;
-    int block_height = (bottom_bound - top_bound) / num_rows;
+    float block_width = (float)(right_bound - left_bound) / num_cols;
+    float block_height = (float)(bottom_bound - top_bound) / num_rows;
+    printf("num_rows: %d, num_cols: %d\n", num_rows, num_cols);
+    printf("Block Width: %f, Block Height: %f\n", block_width, block_height);
+    printf("Left Bound: %d, Right Bound: %d, Top Bound: %d, Bottom Bound: %d\n", left_bound, right_bound, top_bound, bottom_bound);
 
     // Draw vertical lines
     for (int col = 0; col <= num_cols; col++) {
-        int x = left_bound + col * block_width;
-        for (int y = top_bound; y <= bottom_bound; y++) {
-            Uint32* pixels = (Uint32*)surface->pixels;
-            pixels[(y * surface->pitch / 4) + x] = SDL_MapRGBA(surface->format, blue.r, blue.g, blue.b, blue.a);
-        }
+        int x = left_bound + (int)(col * block_width + 0.5f); // Round to nearest integer
+        draw_line(surface, x, -1, blue);
     }
 
     // Draw horizontal lines
     for (int row = 0; row <= num_rows; row++) {
-        int y = top_bound + row * block_height;
-        for (int x = left_bound; x <= right_bound; x++) {
-            Uint32* pixels = (Uint32*)surface->pixels;
-            pixels[(y * surface->pitch / 4) + x] = SDL_MapRGBA(surface->format, blue.r, blue.g, blue.b, blue.a);
-        }
+        int y = top_bound + (int)(row * block_height + 0.5f); // Round to nearest integer
+        draw_line(surface, -1, y, blue);
     }
+
+    // Draw border square around the grid
+    draw_line(surface, -1, top_bound, (SDL_Color){255, 0, 0, 255});
+    draw_line(surface, -1, bottom_bound, (SDL_Color){255, 0, 0, 255});
+    draw_line(surface, right_bound, -1, (SDL_Color){255, 0, 0, 255});
+    draw_line(surface, left_bound, -1, (SDL_Color){255, 0, 0, 255});
 }
 
 // Function to draw border square on a surface and check if it's still in the bounds

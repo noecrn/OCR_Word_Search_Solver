@@ -26,7 +26,7 @@ int count_black_pixels_in_block(SDL_Surface* surface, int start_x, int start_y, 
     }
 
     // Draw the border around the block
-    // draw_square(surface, start_x, start_y, BLOCK_SIZE, (SDL_Color){0, 0, 255, 255});
+    // draw_square(surface, start_x, start_y, block_size, (SDL_Color){0, 0, 255, 255});
 
     return count_black;
 }
@@ -54,15 +54,19 @@ void detect_letter_grid(
     *bottom_bound = 0;
 
     // On peut démarrer la recherche à partir de différents points dans l'image pour capturer toutes les lettres
+    int width_center = width / 2;
+    int height_center = height / 2 + block_size * 3;
     int start_points[][2] = {
-        {width / 2, height / 2}, 
-        {width / 2 + block_size, height / 2 + block_size}, 
-        {width / 2 - block_size, height / 2 + block_size}, 
-        {width / 2 + block_size, height / 2 - block_size}, 
-        {width / 2 - block_size, height / 2 - block_size}
+        {width_center, height_center}, 
+        {width_center + block_size, height_center + block_size}, 
+        {width_center - block_size, height_center + block_size}, 
+        {width_center + block_size, height_center - block_size}, 
+        {width_center - block_size, height_center - block_size}
     };
 
-    for (int i = 0; i < 5; i++) {
+    int num_start_points = sizeof(start_points) / sizeof(start_points[0]);
+
+    for (int i = 0; i < num_start_points; i++) {
         int start_x = start_points[i][0];
         int start_y = start_points[i][1];
 
@@ -71,20 +75,25 @@ void detect_letter_grid(
         // Propagation vers la gauche
         for (int x = start_x; x >= 0; x -= block_size) {
             int black_pixel_count = count_black_pixels_in_block(surface, x, start_y, block_size, black_tolerance);
+            printf("Left - x: %d, y: %d, black_pixel_count: %d\n", x, start_y, black_pixel_count);
 
             if (black_pixel_count > white_threshold) {
                 consecutive_white_blocks = 0;
-                if (x - block_size >= 0) {
-                    *left_bound = x < *left_bound ? x : *left_bound;
+                if (x < *left_bound) {
+                    *left_bound = x;
+                    printf("Updated Left Bound: %d\n", *left_bound);
                 }
             } else {
                 consecutive_white_blocks++;
-                if (consecutive_white_blocks >= space_threshold) break;
+                if (consecutive_white_blocks > space_threshold) { //! > and not >=
+                    printf("Breaking left at x: %d, consecutive_white_blocks: %d\n", x, consecutive_white_blocks);
+                    break;
+                }
             }
         }
     }
 
-    for (int i = 0; i < 5; i++) {
+    for (int i = 0; i < num_start_points; i++) {
         int start_x = start_points[i][0];
         int start_y = start_points[i][1];
 
@@ -94,6 +103,7 @@ void detect_letter_grid(
         consecutive_white_blocks = 0;
         for (int x = start_x; x < width; x += block_size) {
             int black_pixel_count = count_black_pixels_in_block(surface, x, start_y, block_size, black_tolerance);
+            printf("Right - x: %d, y: %d, black_pixel_count: %d\n", x, start_y, black_pixel_count);
 
             if (black_pixel_count > white_threshold) {
                 consecutive_white_blocks = 0;
@@ -109,7 +119,7 @@ void detect_letter_grid(
         }
     }
 
-    for (int i = 0; i < 5; i++) {
+    for (int i = 0; i < num_start_points; i++) {
         int start_x = start_points[i][0];
         int start_y = start_points[i][1];
 
@@ -119,11 +129,12 @@ void detect_letter_grid(
         consecutive_white_blocks = 0;
         for (int y = start_y; y >= 0; y -= block_size) {
             int black_pixel_count = count_black_pixels_in_block(surface, start_x, y, block_size, black_tolerance);
+            printf("Top - x: %d, y: %d, black_pixel_count: %d\n", start_x, y, black_pixel_count);
 
             if (black_pixel_count > white_threshold) {
                 consecutive_white_blocks = 0;
-                if (y - block_size >= 0) {
-                    *top_bound = y < *top_bound ? y : *top_bound;
+                if (y < *top_bound) {
+                    *top_bound = y;
                 }
             } else {
                 consecutive_white_blocks++;
@@ -132,7 +143,7 @@ void detect_letter_grid(
         }
     }
 
-    for (int i = 0; i < 5; i++) {
+    for (int i = 0; i < num_start_points; i++) {
         int start_x = start_points[i][0];
         int start_y = start_points[i][1];
 
@@ -142,6 +153,7 @@ void detect_letter_grid(
         consecutive_white_blocks = 0;
         for (int y = start_y; y < height; y += block_size) {
             int black_pixel_count = count_black_pixels_in_block(surface, start_x, y, block_size, black_tolerance);
+            printf("Bottom - x: %d, y: %d, black_pixel_count: %d\n", start_x, y, black_pixel_count);
 
             if (black_pixel_count > white_threshold) {
                 consecutive_white_blocks = 0;
@@ -156,4 +168,6 @@ void detect_letter_grid(
             }
         }
     }
+
+    printf("Left Bound: %d, Right Bound: %d, Top Bound: %d, Bottom Bound: %d\n", *left_bound, *right_bound, *top_bound, *bottom_bound);
 }
