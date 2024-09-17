@@ -205,3 +205,14 @@ void save_image(SDL_Surface* surface, const char* outputPath) {
         printf("IMG_SavePNG Error: %s\n", IMG_GetError());
     }
 }
+
+// Function to resize cells
+void cells_resize(int num_rows, int num_cols) {
+    for (int i = 0; i < num_rows; i++) {
+        for (int j = 0; j < num_cols; j++) {
+            char cell_filename[50];
+            snprintf(cell_filename, sizeof(cell_filename), "data/cells/cell_%d_%d.png", i, j);
+            resize_image_square(cell_filename, cell_filename, 40);
+        }
+    }
+}
