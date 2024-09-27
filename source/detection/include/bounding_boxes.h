@@ -13,7 +13,8 @@ int count_black_pixels_in_block(
     int start_x, 
     int start_y, 
     int block_size, 
-    int black_tolerance);
+    int black_tolerance,
+    int is_draw_square);
 void detect_letter_grid(
     SDL_Surface* surface, 
     int* left_bound, 

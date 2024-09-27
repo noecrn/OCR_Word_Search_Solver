@@ -20,7 +20,7 @@ int detect_columns(SDL_Surface* surface, int left_bound, int right_bound, int to
 
         // Count the number of black pixels in this column
         for (int y = top_bound; y <= bottom_bound; y += BLOCK_SIZE) {
-            black_pixel_count += count_black_pixels_in_block(surface, x, y, BLOCK_SIZE, BLACK_TOLERANCE);
+            black_pixel_count += count_black_pixels_in_block(surface, x, y, BLOCK_SIZE, BLACK_TOLERANCE, 0);
         }
 
         // If this column contains black pixels
@@ -50,7 +50,7 @@ int detect_rows(SDL_Surface* surface, int left_bound, int right_bound, int top_b
 
         // Count the number of black pixels in this row
         for (int x = left_bound; x <= right_bound; x += BLOCK_SIZE) {
-            black_pixel_count += count_black_pixels_in_block(surface, x, y, BLOCK_SIZE, BLACK_TOLERANCE);
+            black_pixel_count += count_black_pixels_in_block(surface, x, y, BLOCK_SIZE, BLACK_TOLERANCE, 0);
         }
 
         // If this row contains black pixels
