@@ -47,12 +47,12 @@ int main() {
     analyze_grid(image, &grid_left, &grid_right, &grid_top, &grid_bottom, &num_cols, &num_rows);
 
     // Draw the grid
-    // draw_grid(image, grid_left, grid_right, grid_top, grid_bottom, num_rows, num_cols);
+    //draw_grid(image, grid_left, grid_right, grid_top, grid_bottom, num_rows, num_cols);
 
     // Detect the word list
     find_words_list(image, &grid_left, &grid_right, &grid_top, &grid_bottom, &list_left, &list_right, &list_top, &list_bottom, 15, 1, 0);
 
-    // Save the SDL surfare to .png
+    // Save the SDL surfare to .png`
     save_image(image, "output/output.png");
 
     // Split the image into smaller images

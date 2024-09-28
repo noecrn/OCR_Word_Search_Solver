@@ -2,6 +2,48 @@
 #include "../include/bounding_boxes.h"
 #include "../include/rendering.h"
 
+// Function to adjust the borders of the words list
+void adjust_border (
+    SDL_Surface* surface,
+    int* list_left,
+    int* list_right,
+    int* list_top,
+    int* list_bottom, 
+    int block_size, 
+    int black_tolerance, 
+    int white_threshold,
+    int space_threshold
+) {
+    // start on the left top corner and go right while there are black pixels then adjust the right border
+    // go down
+    // start a new propagation from the left border just under the last one and go to the right while there are black pixels then adjust the right border
+    // if we reach the bottom border then stop
+    int start_x = *list_left;
+    int start_y = *list_top;
+
+    int consecutive_white_blocks = 0;
+
+    // Propagation to the right
+    for (int y = start_y; y < *list_bottom; y += block_size) {
+        for (int x = start_x; x < surface->w; x += block_size) {
+            int black_pixel_count = count_black_pixels_in_block(surface, x, y, block_size, black_tolerance, 0);
+    
+            if (black_pixel_count > white_threshold) { // If there are enough black pixels
+                consecutive_white_blocks = 0;
+                if (x + block_size < surface->w) { // Check if we are within bounds
+                    *list_right = x + block_size > *list_right ? x + block_size : *list_right;
+                } else { // If we are at the edge of the image
+                    *list_right = x > *list_right ? x : *list_right;
+                }
+            } else { // If there are not enough black pixels
+                consecutive_white_blocks++;
+                if (consecutive_white_blocks >= space_threshold) break; // Stop if we have encountered enough consecutive white blocks
+            }
+        }
+        consecutive_white_blocks = 0;
+    }
+}
+
 // Function to get the words list bounding box
 void detect_words_list (
     SDL_Surface* surface,
@@ -29,9 +71,6 @@ void detect_words_list (
         {start_x, start_y}
     };
 
-    printf("Start x: %d\n", start_x);
-    printf("Start y: %d\n", start_y);
-
     // Propagation to the left
     int num_start_points = sizeof(start_points) / sizeof(start_points[0]);
 
@@ -43,7 +82,7 @@ void detect_words_list (
             int consecutive_white_blocks = 0;
             
             for (int x = start_x; x >= 0; x -= block_size) {
-                int black_pixel_count = count_black_pixels_in_block(surface, x, start_y, block_size, black_tolerance, 1);
+                int black_pixel_count = count_black_pixels_in_block(surface, x, start_y, block_size, black_tolerance, 0);
 
                 if (black_pixel_count > white_threshold) { // If there are enough black pixels
                     consecutive_white_blocks = 0;
@@ -72,7 +111,7 @@ void detect_words_list (
 
             consecutive_white_blocks = 0;
             for (int x = start_x; x < width; x += block_size) {
-                int black_pixel_count = count_black_pixels_in_block(surface, x, start_y, block_size, black_tolerance, 1);
+                int black_pixel_count = count_black_pixels_in_block(surface, x, start_y, block_size, black_tolerance, 0);
 
                 if (black_pixel_count > white_threshold) { // If there are enough black pixels
                     consecutive_white_blocks = 0;
@@ -101,7 +140,7 @@ void detect_words_list (
 
             consecutive_white_blocks = 0;
             for (int y = start_y; y >= 0; y -= block_size) {
-                int black_pixel_count = count_black_pixels_in_block(surface, start_x, y, block_size, black_tolerance, 1);
+                int black_pixel_count = count_black_pixels_in_block(surface, start_x, y, block_size, black_tolerance, 0);
 
                 if (black_pixel_count > white_threshold) { // If there are enough black pixels
                     consecutive_white_blocks = 0;
@@ -130,7 +169,7 @@ void detect_words_list (
 
             consecutive_white_blocks = 0;
             for (int y = start_y; y < height; y += block_size) {
-                int black_pixel_count = count_black_pixels_in_block(surface, start_x, y, block_size, black_tolerance, 1);
+                int black_pixel_count = count_black_pixels_in_block(surface, start_x, y, block_size, black_tolerance, 0);
 
                 if (black_pixel_count > white_threshold) { // If there are enough black pixels
                     consecutive_white_blocks = 0;
@@ -151,6 +190,7 @@ void detect_words_list (
         *list_bottom = start_y + block_size;
     }
 
+    adjust_border(surface, list_left, list_right, list_top, list_bottom, 17, black_tolerance, white_threshold, space_threshold);
     draw_line(surface, *list_left, -1, (SDL_Color){255, 0, 0, 255});
     draw_line(surface, -1, *list_top, (SDL_Color){255, 0, 0, 255});
     draw_line(surface, *list_right, -1, (SDL_Color){255, 0, 0, 255});
@@ -185,7 +225,6 @@ void find_words_list (
         int black_pixel_count = count_black_pixels_in_block(surface, x, height_center, block_size, black_tolerance, 0);
 
         if (black_pixel_count > white_threshold) {
-            printf("Pixels detected on the left\n");
             detect_words_list(surface, list_left, list_right, list_top, list_bottom, x, height_center, 16, black_tolerance, white_threshold, 1, 0, 1, 1, 1);
             break;
         }
@@ -196,7 +235,6 @@ void find_words_list (
         int black_pixel_count = count_black_pixels_in_block(surface, x, height_center, block_size, black_tolerance, 0);
 
         if (black_pixel_count > white_threshold) {
-            printf("Pixels detected on the right\n");
             detect_words_list(surface, list_left, list_right, list_top, list_bottom, x, height_center, 16, black_tolerance, white_threshold, 1, 1, 0, 1, 1);
             break;
         }
@@ -207,7 +245,6 @@ void find_words_list (
         int black_pixel_count = count_black_pixels_in_block(surface, width_center, y, block_size, black_tolerance, 0);
 
         if (black_pixel_count > white_threshold) {
-            printf("Pixels detected on the top\n");
             detect_words_list(surface, list_left, list_right, list_top, list_bottom, width_center, y, 16, black_tolerance, white_threshold, 1, 1, 1, 0, 1);
             break;
         }
@@ -218,8 +255,7 @@ void find_words_list (
         int black_pixel_count = count_black_pixels_in_block(surface, width_center, y, block_size, black_tolerance, 0);
 
         if (black_pixel_count > white_threshold) {
-            printf("Pixels detected on the bottom\n");
-            detect_words_list(surface, list_left, list_right, list_top, list_bottom, width_center, y, 16, black_tolerance, white_threshold, 1, 1, 1, 1, 0);
+            detect_words_list(surface, list_left, list_right, list_top, list_bottom, width_center, y, 16, black_tolerance, white_threshold, 2, 1, 1, 1, 0);
             break;
         }
     }
