@@ -14,10 +14,7 @@ void adjust_border (
     int white_threshold,
     int space_threshold
 ) {
-    // start on the left top corner and go right while there are black pixels then adjust the right border
-    // go down
-    // start a new propagation from the left border just under the last one and go to the right while there are black pixels then adjust the right border
-    // if we reach the bottom border then stop
+    // Define starting points for propagation
     int start_x = *list_left;
     int start_y = *list_top;
 

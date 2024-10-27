@@ -6,6 +6,7 @@
 #include "../include/lettre_extraction.h"
 #include "../include/border_dilatation.h"
 #include "../include/words_list.h"
+#include "../include/words_extraction.h"
 
 #define IMAGE "data/level_1_image_1.png" // level_2_image_1.png, level_2_image_2.png and level_4_image_2.png not working
 
@@ -51,6 +52,9 @@ int main() {
 
     // Detect the word list
     find_words_list(image, &grid_left, &grid_right, &grid_top, &grid_bottom, &list_left, &list_right, &list_top, &list_bottom, 15, 1, 0);
+
+    // Extract the words list
+    words_extraction(image, &list_left, &list_right, &list_top, &list_bottom, 15, 1, 0);
 
     // Save the SDL surfare to .png`
     save_image(image, "output/output.png");
