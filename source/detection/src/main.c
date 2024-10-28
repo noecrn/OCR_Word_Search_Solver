@@ -54,7 +54,11 @@ int main() {
     find_words_list(image, &grid_left, &grid_right, &grid_top, &grid_bottom, &list_left, &list_right, &list_top, &list_bottom, 15, 1, 0);
 
     // Extract the words list
-    words_extraction(image, &list_left, &list_right, &list_top, &list_bottom, 1);
+    coordinates* words = words_extraction(image, list_left, list_right, list_top, list_bottom, 1);
+
+    for (int i = 0; i < 10; i++) {
+        printf("Word %d: %d %d \n", i, words[i].top_bound, words[i].bottom_bound);
+    }
 
     // Save the SDL surfare to .png`
     save_image(image, "output/output.png");
