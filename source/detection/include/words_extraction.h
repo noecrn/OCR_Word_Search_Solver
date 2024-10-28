@@ -7,8 +7,7 @@ int count_black_pixels_on_a_line(
 	SDL_Surface* surface, 
     int start, 
     int end, 
-	int y,
-    int is_draw_line
+	int y
 );
 
 void words_extraction (
@@ -17,8 +16,6 @@ void words_extraction (
 	int* list_right, 
 	int* list_top, 
 	int* list_bottom, 
-	int block_size, 
-	int black_tolerance, 
 	int white_threshold
 );
 
