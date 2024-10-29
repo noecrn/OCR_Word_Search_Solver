@@ -50,3 +50,6 @@ clean:
 	-rm -f $(OBJ) $(DEP) $(EXEC)
 	-rm -f data/cells/*
 	-rm -f data/words/*
+
+format:
+	clang-format -i $(wildcard $(SRC_DIRS:=/*.c) $(SRC_DIRS:=/*.h))
