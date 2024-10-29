@@ -34,3 +34,34 @@ void split_grid_into_images(SDL_Surface* image, int left, int top, int right, in
         }
     }
 }
+
+// Function to extract the letters from the words list
+void split_word_into_images(SDL_Surface* surface, int letter_left, int letter_right, int letter_top, int letter_bottom, int current_word, int current_letter) {
+    int letter_width = letter_right - letter_left;
+    int letter_height = letter_bottom - letter_top;
+
+    const char* words_directory = "data/words";
+
+    // Define the source rectangle for the letter within the main surface
+    SDL_Rect src_rect = { letter_left, letter_top, letter_width, letter_height };
+
+    // Create a surface to hold the letter image
+    SDL_Surface* letter_surface = SDL_CreateRGBSurface(0, letter_width, letter_height, 32, 0x00FF0000, 0x0000FF00, 0x000000FF, 0xFF000000);
+    if (letter_surface == NULL) {
+        fprintf(stderr, "Error creating letter surface: %s\n", SDL_GetError());
+        exit(1);
+    }
+
+    // Copy the specified area from the main surface to the new letter surface
+    SDL_BlitSurface(surface, &src_rect, letter_surface, NULL);
+
+    // Generate the filename for the letter image
+    char filename[256];
+    snprintf(filename, sizeof(filename), "%s/word_%d_letter_%d.png", words_directory, current_word, current_letter);
+
+    // Save the letter image
+    save_image(letter_surface, filename);
+
+    // Free the surface of the letter image
+    SDL_FreeSurface(letter_surface);
+}

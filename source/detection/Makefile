@@ -48,3 +48,5 @@ $(EXEC): $(OBJ)
 # Clean up build artifacts
 clean:
 	-rm -f $(OBJ) $(DEP) $(EXEC)
+	-rm -f data/cells/*
+	-rm -f data/words/*
