@@ -105,14 +105,10 @@ int main (void) {
     read_file_twodim("data/hiddenWeights.txt",numInputs,numHiddenNodes,hiddenWeights);
     read_file_twodim("data/outputWeights.txt",numHiddenNodes,numOutputs,outputWeights);
 
-    char* pictures_path[] = 
-    {"letters/A.png", "letters/B.png", "letters/C.png", "letters/D.png", "letters/E.png", "letters/F.png", "letters/G.png", "letters/H.png", "letters/I.png"
-    , "letters/J.png", "letters/K.png", "letters/L.png", "letters/M.png", "letters/N.png", "letters/O.png", "letters/P.png", "letters/Q.png", "letters/R.png"
-    , "letters/S.png", "letters/T.png", "letters/U.png", "letters/V.png", "letters/W.png", "letters/X.png", "letters/Y.png", "letters/Z.png"
-    };
+    char* pictures_path[] = {"letters/A.png", "letters/B.png", "letters/C.png", "letters/D.png", "letters/E.png"};
     double inputs[numInputs];
 
-    load_training_inputs(pictures_path[14],inputs);
+    load_training_inputs(pictures_path[4],inputs);
 
     // Forward pass
     for (int j = 0; j < numHiddenNodes; j++) {
