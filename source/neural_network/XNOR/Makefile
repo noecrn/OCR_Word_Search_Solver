@@ -3,7 +3,7 @@ LIBS = $(shell pkg-config --libs sdl2 SDL2_image) -lm
 CFLAGS = -Wall -Wextra -O3 $(shell pkg-config --cflags sdl2 SDL2_image)
 
 # Source, object, and executable definitions
-SRC = data/image_loader.c main.c
+SRC = ../data/image_loader.c main.c
 OBJ = $(SRC:.c=.o)
 DEP = $(SRC:.c=.d)
 EXEC = main
