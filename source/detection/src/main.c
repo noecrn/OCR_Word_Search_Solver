@@ -8,9 +8,7 @@
 #include "../include/words_extraction.h"
 #include "../include/words_list.h"
 
-#define IMAGE                                                                  \
-  "data/level_1_image_1.png" // level_2_image_1.png, level_2_image_2.png and
-                             // level_4_image_2.png not working
+#define IMAGE "data/level_1_image_1.png"
 
 // Function to get image parameters based on the input path
 void image_parameter(const char *inputPath, SDL_Surface *surface,
@@ -67,17 +65,21 @@ int main() {
                   &list_left, &list_right, &list_top, &list_bottom, 15, 1, 0);
 
   // Count the number of words
-  int word_count =
-      count_words(image, list_left, list_right, list_top, list_bottom, 0);
+  int word_count = 
+    count_words(image, list_left, list_right, list_top, list_bottom, 0);
 
   // Extract the words list
   coordinates *words = words_extraction(image, list_left, list_right, list_top,
                                         list_bottom, 1, word_count);
 
   // Extract the letters
+  int temp = 0;
+
   for (int i = 0; i < word_count; i++) {
-    letters_extraction(image, list_left, list_right, words[i].top_bound,
-                       words[i].bottom_bound, 1, i);
+    temp = letters_extraction(image, list_left, list_right, words[i].top_bound, words[i].bottom_bound, 1, i);
+
+    // Resize the letters
+    letters_resize(i, temp);
   }
 
   // Save the SDL surfare to .png`

@@ -230,3 +230,13 @@ void cells_resize(int num_rows, int num_cols) {
     }
   }
 }
+
+// Function to resize letters
+void letters_resize(int num_words, int num_letters) {
+  for (int j = 0; j < num_letters; j++) {
+    char letter_filename[50];
+    snprintf(letter_filename, sizeof(letter_filename),
+              "data/words/word_%d_letter_%d.png", num_words, j);
+    resize_image_square(letter_filename, letter_filename, 40);
+  }
+}

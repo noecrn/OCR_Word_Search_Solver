@@ -23,6 +23,7 @@ endif
 
 # Source directories
 SRC_DIRS = src
+INCLUDE_DIRS = include
 
 # Find all .c files in the specified directories
 SRC = $(wildcard $(SRC_DIRS:=/*.c))
@@ -52,4 +53,4 @@ clean:
 	-rm -f data/words/*
 
 format:
-	clang-format -i $(wildcard $(SRC_DIRS:=/*.c) $(SRC_DIRS:=/*.h))
+	clang-format -i $(wildcard $(SRC_DIRS:=/*.c) $(INCLUDE_DIRS:=/*.h))
