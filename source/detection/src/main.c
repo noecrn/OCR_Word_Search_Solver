@@ -65,8 +65,8 @@ int main() {
                   &list_left, &list_right, &list_top, &list_bottom, 15, 1, 0);
 
   // Count the number of words
-  int word_count = 
-    count_words(image, list_left, list_right, list_top, list_bottom, 0);
+  int word_count =
+      count_words(image, list_left, list_right, list_top, list_bottom, 0);
 
   // Extract the words list
   coordinates *words = words_extraction(image, list_left, list_right, list_top,
@@ -76,7 +76,8 @@ int main() {
   int temp = 0;
 
   for (int i = 0; i < word_count; i++) {
-    temp = letters_extraction(image, list_left, list_right, words[i].top_bound, words[i].bottom_bound, 1, i);
+    temp = letters_extraction(image, list_left, list_right, words[i].top_bound,
+                              words[i].bottom_bound, 1, i);
 
     // Resize the letters
     letters_resize(i, temp);

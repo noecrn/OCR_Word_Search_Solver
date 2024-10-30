@@ -16,7 +16,7 @@ coordinates *words_extraction(SDL_Surface *surface, int list_left,
                               int list_right, int list_top, int list_bottom,
                               int white_threshold, int word_count);
 int letters_extraction(SDL_Surface *surface, int list_left, int list_right,
-                        int list_top, int list_bottom, int white_threshold,
-                        int current_word);
+                       int list_top, int list_bottom, int white_threshold,
+                       int current_word);
 
 #endif

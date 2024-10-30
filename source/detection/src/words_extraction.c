@@ -101,8 +101,8 @@ coordinates *words_extraction(SDL_Surface *surface, int list_left,
 
 // Function to parse words
 int letters_extraction(SDL_Surface *surface, int list_left, int list_right,
-                        int list_top, int list_bottom, int white_threshold,
-                        int current_word) {
+                       int list_top, int list_bottom, int white_threshold,
+                       int current_word) {
   int is_black = 0;
   int letter_left_bound = list_left;
   int current_letter = 0;
