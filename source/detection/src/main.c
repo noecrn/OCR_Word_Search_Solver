@@ -8,8 +8,6 @@
 #include "../include/words_extraction.h"
 #include "../include/words_list.h"
 
-#define IMAGE "data/level_1_image_1.png"
-
 // Function to get image parameters based on the input path
 void image_parameter(const char *inputPath, SDL_Surface *surface,
                      int *grid_left, int *grid_right, int *grid_top,
@@ -29,7 +27,14 @@ void image_parameter(const char *inputPath, SDL_Surface *surface,
   }
 }
 
-int main() {
+int main(int argc, char *argv[]) {
+  if (argc != 2) {
+    printf("Usage: %s <image_path>\n", argv[0]);
+    return 1;
+  }
+
+  const char *IMAGE = argv[1];
+
   // Initialize SDL
   SDL_Init(SDL_INIT_VIDEO);
 
@@ -57,31 +62,32 @@ int main() {
                &num_cols, &num_rows);
 
   // Draw the grid
-  // draw_grid(image, grid_left, grid_right, grid_top, grid_bottom, num_rows,
-  // num_cols);
+  draw_grid(image, grid_left, grid_right, grid_top, grid_bottom, num_rows,
+            num_cols);
 
   // Detect the word list
   find_words_list(image, &grid_left, &grid_right, &grid_top, &grid_bottom,
                   &list_left, &list_right, &list_top, &list_bottom, 15, 1, 0);
 
   // Count the number of words
-  int word_count =
-      count_words(image, list_left, list_right, list_top, list_bottom, 0);
+  // int word_count =
+  //     count_words(image, list_left, list_right, list_top, list_bottom, 0);
 
   // Extract the words list
-  coordinates *words = words_extraction(image, list_left, list_right, list_top,
-                                        list_bottom, 1, word_count);
+  // coordinates *words = words_extraction(image, list_left, list_right,
+  // list_top, list_bottom, 1, word_count);
 
   // Extract the letters
-  int temp = 0;
+  // int temp = 0;
 
-  for (int i = 0; i < word_count; i++) {
-    temp = letters_extraction(image, list_left, list_right, words[i].top_bound,
-                              words[i].bottom_bound, 1, i);
+  // for (int i = 0; i < word_count; i++) {
+  //   temp = letters_extraction(image, list_left, list_right,
+  //   words[i].top_bound,
+  //                             words[i].bottom_bound, 1, i);
 
-    // Resize the letters
-    letters_resize(i, temp);
-  }
+  //   // Resize the letters
+  //   letters_resize(i, temp);
+  // }
 
   // Save the SDL surfare to .png`
   save_image(image, "output/output.png");
