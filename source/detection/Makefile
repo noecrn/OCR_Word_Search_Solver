@@ -1,5 +1,5 @@
-CC = gcc -fsanitize=address
-CFLAGS = -Wall -Wextra -Werror -O3
+CC = gcc -D__NO_INLINE__
+CFLAGS = -Wall -Wextra -O3
 LIBS = -lm
 
 # OS-specific configuration
