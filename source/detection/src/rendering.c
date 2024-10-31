@@ -54,13 +54,13 @@ void draw_grid(SDL_Surface *surface, int left_bound, int right_bound,
   // Draw vertical lines
   for (int col = 0; col <= num_cols; col++) {
     int x = left_bound + (int)(col * block_width + 0.5f);
-    draw_line(surface, x, -1, blue);
+    // draw_line(surface, x, -1, blue);
   }
 
   // Draw horizontal lines
   for (int row = 0; row <= num_rows; row++) {
     int y = top_bound + (int)(row * block_height + 0.5f);
-    draw_line(surface, -1, y, blue);
+    // draw_line(surface, -1, y, blue);
   }
 
   // Draw border square around the grid

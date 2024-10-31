@@ -190,10 +190,12 @@ void detect_words_list(SDL_Surface *surface, int *list_left, int *list_right,
   adjust_border(surface, list_left, list_right, list_top, list_bottom, 17,
                 black_tolerance, white_threshold, space_threshold);
 
-  // draw_line(surface, *list_left, -1, (SDL_Color){255, 0, 0, 255});
-  // draw_line(surface, -1, *list_top, (SDL_Color){255, 0, 0, 255});
-  // draw_line(surface, *list_right, -1, (SDL_Color){255, 0, 0, 255});
-  // draw_line(surface, -1, *list_bottom, (SDL_Color){255, 0, 0, 255});
+  SDL_Color blue = {0, 0, 255, 255};
+
+  draw_line(surface, *list_left, -1, blue);
+  draw_line(surface, -1, *list_top, blue);
+  draw_line(surface, *list_right, -1, blue);
+  draw_line(surface, -1, *list_bottom, blue);
 }
 
 // Function to find the words list in the grid
