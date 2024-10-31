@@ -196,5 +196,7 @@ int main (void) {
     write_file_twodim("data/hiddenWeights.txt", numInputs, numHiddenNodes, hiddenWeights);
     write_file_twodim("data/outputWeights.txt", numHiddenNodes, numOutputs, outputWeights);
 
+    printf("The neural network has been completely trained\n");
+
     return 0;
 }

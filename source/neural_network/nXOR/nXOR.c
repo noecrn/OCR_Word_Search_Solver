@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+#include <errno.h>
 
 // Fonction d'activation Sigmoïde
 double sigmoid(double x) { return 1 / (1 + exp(-x)); }
@@ -51,6 +52,7 @@ int main(int argc, char *argv[])
 {
     if(argc != 3)
     {
+        printf("You need two argument 1 or 0\n");
         return -1;
     }
 

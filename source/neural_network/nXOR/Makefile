@@ -1,28 +1,28 @@
+# Définir le compilateur et les options
 CC = gcc -fsanitize=address
 LIBS = $(shell pkg-config --libs sdl2 SDL2_image) -lm
 CFLAGS = -Wall -Wextra -O3 $(shell pkg-config --cflags sdl2 SDL2_image)
 
-# Source, object, and executable definitions
-SRC = ../data/image_loader.c main.c
-OBJ = $(SRC:.c=.o)
-DEP = $(SRC:.c=.d)
-EXEC = main
+# Nom des fichiers source et des exécutables
+SRC1 = nXOR.c
+EXEC1 = nXOR
 
-# Default target
-all: $(EXEC)
+SRC2 = nXOR_train.c
+EXEC2 = nXOR_train
 
--include $(DEP)
+# Cible par défaut
+all: $(EXEC1) $(EXEC2)
 
-# Linking the final executable
-$(EXEC): $(OBJ)
-	$(CC) $(CFLAGS) $(OBJ) -o $(EXEC) $(LIBS)
+# Compilation de nXOR
+$(EXEC1): $(SRC1)
+	$(CC) $(CFLAGS) $(SRC1) -o $(EXEC1) $(LIBS)
 
-# Compiling source files
-%.o: %.c
-	$(CC) $(CFLAGS) -MMD -c $< -o $@
+# Compilation de nXOR_train
+$(EXEC2): $(SRC2)
+	$(CC) $(CFLAGS) $(SRC2) -o $(EXEC2) $(LIBS)
 
-# Clean up build artifacts
+# Nettoyage des fichiers générés
 clean:
-	rm -f $(OBJ) $(DEP) $(EXEC)
+	rm -f $(EXEC1) $(EXEC2)
 
-# END
+# FIN
