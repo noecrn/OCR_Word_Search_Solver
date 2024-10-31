@@ -50,10 +50,10 @@ int main (void) {
                                                           {1.0f,0.0f},
                                                           {0.0f,1.0f},
                                                           {1.0f,1.0f}};
-    double training_outputs[numTrainingSets][numOutputs] = {{0.0f},
-                                                            {1.0f},
-                                                            {1.0f},
-                                                            {0.0f}};
+    double training_outputs[numTrainingSets][numOutputs] = {{1.0f},
+                                                            {0.0f},
+                                                            {0.0f},
+                                                            {1.0f}};
     
     for (int i=0; i<numInputs; i++) {
         for (int j=0; j<numHiddenNodes; j++) {

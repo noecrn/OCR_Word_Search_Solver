@@ -27,6 +27,39 @@ void shuffle(int *array, size_t n)
     }
 }
 
+void write_file_onedim(char* file,size_t lenght,double* list)
+{
+    FILE *fl = fopen(file, "w");
+    if (fl == NULL)
+    {
+        printf("Error opening the file %s", file);
+    }
+
+    for (int j = 0; j < lenght; j++) {
+        fprintf(fl, "%f\n",list[j]);
+    }
+
+    fclose(fl);
+}
+
+void write_file_twodim(char* filename,size_t length1,size_t length2,double array[length1][length2])
+{
+    FILE *fl = fopen(filename, "w");
+    if (fl == NULL)
+    {
+        printf("Error opening the file %s", filename);
+    }
+
+    for (int j = 0; j < lenght1; j++) {
+        for (int k = 0; k < length2; k++) {
+            fprintf(fp4, "%f\n",array[k][j]);
+        }
+    }
+
+    fclose(fl);
+}
+
+
 #define numInputs 2
 #define numHiddenNodes 2
 #define numOutputs 1
@@ -50,10 +83,11 @@ int main (void) {
                                                           {1.0f,0.0f},
                                                           {0.0f,1.0f},
                                                           {1.0f,1.0f}};
-    double training_outputs[numTrainingSets][numOutputs] = {{1.0f},
-                                                            {0.0f},
-                                                            {0.0f},
-                                                            {1.0f}};
+
+    double training_outputs[numTrainingSets][numOutputs] = {{0.0f},
+                                                            {1.0f},
+                                                            {1.0f},
+                                                            {0.0f}};
     
     for (int i=0; i<numInputs; i++) {
         for (int j=0; j<numHiddenNodes; j++) {
