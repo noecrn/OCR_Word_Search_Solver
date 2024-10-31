@@ -53,6 +53,7 @@ int findWordInMatrix(char mat[ROWS][COLS], int rows, int cols, const char* word,
 }
 
 int main(int argc, char* argv[]) {
+    (void)argc;
     FILE *fptr;
     fptr = fopen(argv[1],"r");
     char line[100];
@@ -66,13 +67,13 @@ int main(int argc, char* argv[]) {
 	}
 	i++;
     }
-    char mat[ROWS][COLS] = {
-        {'H', 'E', 'L', 'L', 'O'},
-        {'A', 'B', 'C', 'D', 'E'},
-        {'F', 'G', 'H', 'I', 'J'},
-        {'K', 'L', 'M', 'N', 'O'},
-        {'P', 'Q', 'R', 'S', 'T'}
-    };
+//    char mat[ROWS][COLS] = {
+//        {'H', 'E', 'L', 'L', 'O'},
+//        {'A', 'B', 'C', 'D', 'E'},
+//        {'F', 'G', 'H', 'I', 'J'},
+//        {'K', 'L', 'M', 'N', 'O'},
+//        {'P', 'Q', 'R', 'S', 'T'}
+//    };
     char* word=argv[2];
     int rows = 5;
     int cols = 5;
@@ -82,6 +83,6 @@ int main(int argc, char* argv[]) {
         printf("Le mot '%s' a été trouvé dans la matrice.\n", word);
         printf("(%d,%d)(%d,%d)\n", startX, startY, endX, endY);
     } else {
-        printf("Not found", word);
+        printf("Not found");
     }
 }
