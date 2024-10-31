@@ -1,0 +1,28 @@
+# Ignorer les fichiers de configuration du système
+.DS_Store
+
+# Ignorer les fichiers générés par les outils de construction
+*.d
+*.o
+*.a
+*.so
+*.dylib
+
+# Ignorer les fichiers temporaires
+*.tmp
+*.bak
+
+# Ignorer les fichiers de configuration de l'éditeur
+.vscode/
+
+# Ignorer les fichiers spécifiques au compilateur (exemple: GCC, Clang)
+*.gcno
+*.gcda
+*.gcov
+
+# Ignorer les fichiers logs
+*.log
+
+# Ignorer les fichiers de sortie
+*.out
+*.exe
