@@ -46,7 +46,7 @@ void draw_line(SDL_Surface *surface, int x, int y, SDL_Color color) {
 // Function to draw the grid on an SDL surface
 void draw_grid(SDL_Surface *surface, int left_bound, int right_bound,
                int top_bound, int bottom_bound, int num_rows, int num_cols) {
-  SDL_Color blue = {0, 0, 255, 255};
+  SDL_Color red = {255, 0, 0, 255};
 
   float block_width = (float)(right_bound - left_bound) / num_cols;
   float block_height = (float)(bottom_bound - top_bound) / num_rows;
@@ -67,10 +67,10 @@ void draw_grid(SDL_Surface *surface, int left_bound, int right_bound,
   }
 
   // Draw border square around the grid
-  draw_line(surface, -1, top_bound, blue);
-  draw_line(surface, -1, bottom_bound, blue);
-  draw_line(surface, right_bound, -1, blue);
-  draw_line(surface, left_bound, -1, blue);
+  draw_line(surface, -1, top_bound, red);
+  draw_line(surface, -1, bottom_bound, red);
+  draw_line(surface, right_bound, -1, red);
+  draw_line(surface, left_bound, -1, red);
 }
 
 // Function to draw border square on a surface and check if it's still in the
