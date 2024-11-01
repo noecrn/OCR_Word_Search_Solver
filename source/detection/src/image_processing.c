@@ -4,6 +4,30 @@
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include "../include/image_processing.h"
+
+// function to display image on the screen
+void display_image(SDL_Surface *image) {
+  // Afficher l'image dans une fenêtre SDL
+  SDL_Window *window = SDL_CreateWindow(
+      "Grid detection", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
+      image->w, image->h, SDL_WINDOW_SHOWN);
+  if (window == NULL) {
+    printf("Erreur lors de la création de la fenêtre: %s\n", SDL_GetError());
+    SDL_FreeSurface(image);
+    SDL_Quit();
+  }
+
+  SDL_Surface *screenSurface = SDL_GetWindowSurface(window);
+  SDL_BlitSurface(image, NULL, screenSurface,
+                  NULL);           // Copier l'image dans la fenêtre
+  SDL_UpdateWindowSurface(window); // Mettre à jour l'affichage
+
+  // Attendre 7 secondes avant de fermer
+  SDL_Delay(7000);
+
+  SDL_DestroyWindow(window);
+}
 
 // Function to rotate an image
 void rotate(const char *inputPath, const char *outputPath, double angle) {
@@ -66,6 +90,9 @@ void rotate(const char *inputPath, const char *outputPath, double angle) {
   if (IMG_SavePNG(rotatedSurface, outputPath) != 0) {
     errx(EXIT_FAILURE, "Failed to save rotated image: %s", IMG_GetError());
   }
+
+  // Display the rotated image
+  display_image(rotatedSurface);
 
   // Clean up resources
   SDL_DestroyTexture(texture);

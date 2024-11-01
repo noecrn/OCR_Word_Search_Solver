@@ -27,29 +27,6 @@ void image_parameter(const char *inputPath, SDL_Surface *surface,
   }
 }
 
-// function to display image on the screen
-void display_image(SDL_Surface *image) {
-  // Afficher l'image dans une fenêtre SDL
-  SDL_Window *window = SDL_CreateWindow(
-      "Image Noir et Blanc", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
-      image->w, image->h, SDL_WINDOW_SHOWN);
-  if (window == NULL) {
-    printf("Erreur lors de la création de la fenêtre: %s\n", SDL_GetError());
-    SDL_FreeSurface(image);
-    SDL_Quit();
-  }
-
-  SDL_Surface *screenSurface = SDL_GetWindowSurface(window);
-  SDL_BlitSurface(image, NULL, screenSurface,
-                  NULL);           // Copier l'image dans la fenêtre
-  SDL_UpdateWindowSurface(window); // Mettre à jour l'affichage
-
-  // Attendre 7 secondes avant de fermer
-  SDL_Delay(7000);
-
-  SDL_DestroyWindow(window);
-}
-
 int main(int argc, char *argv[]) {
   printf("argc: %d\n", argc);
   if (argc < 2 || argc > 3) {
