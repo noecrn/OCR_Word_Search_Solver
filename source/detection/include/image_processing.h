@@ -3,7 +3,7 @@
 
 #include <SDL2/SDL.h>
 
-void rotate_image(const char *inputPath, const char *outputPath, double angle);
+void rotate(const char *inputPath, const char *outputPath, double angle);
 void resize_image(const char *inputPath, const char *outputPath,
                   int targetSize);
 void resize_image_square(const char *inputPath, const char *outputPath,

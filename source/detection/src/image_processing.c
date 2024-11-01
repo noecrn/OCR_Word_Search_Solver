@@ -6,41 +6,46 @@
 #include <stdlib.h>
 
 // Function to rotate an image
-void rotate_image(const char *inputPath, const char *outputPath, double angle) {
+void rotate(const char *inputPath, const char *outputPath, double angle) {
+  // Initialize SDL
   if (SDL_Init(SDL_INIT_VIDEO) != 0) {
     errx(EXIT_FAILURE, "Failed to initialize SDL: %s", SDL_GetError());
   }
 
+  // Load the image from the given input path
   SDL_Surface *imageSurface = IMG_Load(inputPath);
   if (!imageSurface) {
     errx(EXIT_FAILURE, "Failed to load image: %s", IMG_GetError());
   }
 
+  // Calculate the angle in radians and the new dimensions
   double angle_rad = angle * M_PI / 180;
   int new_width = ceil(fabs(imageSurface->w * cos(angle_rad)) +
                        fabs(imageSurface->h * sin(angle_rad)));
   int new_height = ceil(fabs(imageSurface->w * sin(angle_rad)) +
                         fabs(imageSurface->h * cos(angle_rad)));
 
-  SDL_Surface *rotatedSurface = SDL_CreateRGBSurface(
-      0, new_width, new_height, imageSurface->format->BitsPerPixel,
-      imageSurface->format->Rmask, imageSurface->format->Gmask,
-      imageSurface->format->Bmask, imageSurface->format->Amask);
+  // Create a new SDL_Surface for the rotated image
+  SDL_Surface *rotatedSurface =
+      SDL_CreateRGBSurface(0, new_width, new_height, 32, 0, 0, 0, 0);
   if (!rotatedSurface) {
     SDL_FreeSurface(imageSurface);
     errx(EXIT_FAILURE, "Failed to create rotated surface: %s", SDL_GetError());
   }
 
-  SDL_Renderer *renderer = SDL_CreateRenderer(
-      SDL_CreateWindow("temp", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
-                       new_width, new_height, SDL_WINDOW_SHOWN),
-      -1, SDL_RENDERER_SOFTWARE);
+  // Create a software renderer
+  SDL_Renderer *renderer = SDL_CreateSoftwareRenderer(rotatedSurface);
   if (!renderer) {
     SDL_FreeSurface(imageSurface);
     SDL_FreeSurface(rotatedSurface);
     errx(EXIT_FAILURE, "Failed to create renderer: %s", SDL_GetError());
   }
 
+  // Clear the renderer with a background color
+  SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255); // Black background
+  SDL_RenderClear(renderer);
+
+  // Create a texture from the original surface
   SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, imageSurface);
   if (!texture) {
     SDL_DestroyRenderer(renderer);
@@ -49,6 +54,7 @@ void rotate_image(const char *inputPath, const char *outputPath, double angle) {
     errx(EXIT_FAILURE, "Failed to create texture: %s", SDL_GetError());
   }
 
+  // Render the texture to the rotated surface
   SDL_Rect dstRect = {(new_width - imageSurface->w) / 2,
                       (new_height - imageSurface->h) / 2, imageSurface->w,
                       imageSurface->h};
@@ -56,16 +62,18 @@ void rotate_image(const char *inputPath, const char *outputPath, double angle) {
                    SDL_FLIP_NONE);
   SDL_RenderPresent(renderer);
 
+  // Save the rotated image to the output path
   if (IMG_SavePNG(rotatedSurface, outputPath) != 0) {
     errx(EXIT_FAILURE, "Failed to save rotated image: %s", IMG_GetError());
-  } else {
-    printf("Image saved successfully to: %s\n", outputPath);
   }
 
+  // Clean up resources
   SDL_DestroyTexture(texture);
   SDL_DestroyRenderer(renderer);
   SDL_FreeSurface(imageSurface);
   SDL_FreeSurface(rotatedSurface);
+
+  // Quit SDL
   SDL_Quit();
 }
 

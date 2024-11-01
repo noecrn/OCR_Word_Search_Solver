@@ -27,80 +27,116 @@ void image_parameter(const char *inputPath, SDL_Surface *surface,
   }
 }
 
-int main(int argc, char *argv[]) {
-  if (argc != 2) {
-    printf("Usage: %s <image_path>\n", argv[0]);
-    return 1;
+// function to display image on the screen
+void display_image(SDL_Surface *image) {
+  // Afficher l'image dans une fenêtre SDL
+  SDL_Window *window = SDL_CreateWindow(
+      "Image Noir et Blanc", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
+      image->w, image->h, SDL_WINDOW_SHOWN);
+  if (window == NULL) {
+    printf("Erreur lors de la création de la fenêtre: %s\n", SDL_GetError());
+    SDL_FreeSurface(image);
+    SDL_Quit();
   }
 
-  const char *IMAGE = argv[1];
+  SDL_Surface *screenSurface = SDL_GetWindowSurface(window);
+  SDL_BlitSurface(image, NULL, screenSurface,
+                  NULL);           // Copier l'image dans la fenêtre
+  SDL_UpdateWindowSurface(window); // Mettre à jour l'affichage
 
-  // Initialize SDL
-  SDL_Init(SDL_INIT_VIDEO);
+  // Attendre 7 secondes avant de fermer
+  SDL_Delay(7000);
 
-  // Define variables
-  int grid_left, grid_right, grid_top, grid_bottom;
-  int list_left, list_right, list_top, list_bottom;
-  int num_rows, num_cols;
+  SDL_DestroyWindow(window);
+}
 
-  // Resize the image
-  resize_image(IMAGE, "output/temp_resized.png", 700);
+int main(int argc, char *argv[]) {
+  printf("argc: %d\n", argc);
+  if (argc < 2 || argc > 3) {
+    printf("Usage: %s <image_path> or %s <image_path> <angle>\n", argv[0], argv[0]);
+    return 1;
+  } else if (argc == 2) { // grid detection function
+    printf("Grid detection\n");
+    const char *IMAGE = argv[1];
 
-  // Load the resized image
-  SDL_Surface *image = load_image("output/temp_resized.png");
+    // Initialize SDL
+    SDL_Init(SDL_INIT_VIDEO);
 
-  // Get the bounding box parameters
-  image_parameter(IMAGE, image, &grid_left, &grid_right, &grid_top,
-                  &grid_bottom);
+    // Define variables
+    int grid_left, grid_right, grid_top, grid_bottom;
+    int list_left, list_right, list_top, list_bottom;
+    int num_rows, num_cols;
 
-  // Adjust the borders
-  check_and_dilate_borders(image, &grid_left, &grid_right, &grid_top,
-                           &grid_bottom);
+    // Resize the image
+    resize_image(IMAGE, "output/temp_resized.png", 700);
 
-  // Count the number of rows and columns
-  analyze_grid(image, &grid_left, &grid_right, &grid_top, &grid_bottom,
-               &num_cols, &num_rows);
+    // Load the resized image
+    SDL_Surface *image = load_image("output/temp_resized.png");
 
-  // Draw the grid
-  draw_grid(image, grid_left, grid_right, grid_top, grid_bottom, num_rows,
-            num_cols);
+    // Get the bounding box parameters
+    image_parameter(IMAGE, image, &grid_left, &grid_right, &grid_top,
+                    &grid_bottom);
 
-  // Detect the word list
-  find_words_list(image, &grid_left, &grid_right, &grid_top, &grid_bottom,
-                  &list_left, &list_right, &list_top, &list_bottom, 15, 1, 0);
+    // Adjust the borders
+    check_and_dilate_borders(image, &grid_left, &grid_right, &grid_top,
+                             &grid_bottom);
 
-  // Count the number of words
-  // int word_count =
-  //     count_words(image, list_left, list_right, list_top, list_bottom, 0);
+    // Count the number of rows and columns
+    analyze_grid(image, &grid_left, &grid_right, &grid_top, &grid_bottom,
+                 &num_cols, &num_rows);
 
-  // Extract the words list
-  // coordinates *words = words_extraction(image, list_left, list_right,
-  // list_top, list_bottom, 1, word_count);
+    // Draw the grid
+    draw_grid(image, grid_left, grid_right, grid_top, grid_bottom, num_rows,
+              num_cols);
 
-  // Extract the letters
-  // int temp = 0;
+    // Detect the word list
+    find_words_list(image, &grid_left, &grid_right, &grid_top, &grid_bottom,
+                    &list_left, &list_right, &list_top, &list_bottom, 15, 1, 0);
 
-  // for (int i = 0; i < word_count; i++) {
-  //   temp = letters_extraction(image, list_left, list_right,
-  //   words[i].top_bound,
-  //                             words[i].bottom_bound, 1, i);
+    // Count the number of words
+    // int word_count =
+    //     count_words(image, list_left, list_right, list_top, list_bottom, 0);
 
-  //   // Resize the letters
-  //   letters_resize(i, temp);
-  // }
+    // Extract the words list
+    // coordinates *words = words_extraction(image, list_left, list_right,
+    // list_top, list_bottom, 1, word_count);
 
-  // Save the SDL surfare to .png`
-  save_image(image, "output/output.png");
+    // Extract the letters
+    // int temp = 0;
 
-  // Split the image into smaller images
-  // split_grid_into_images(image, grid_left, grid_top, grid_right, grid_bottom,
-  // num_rows, num_cols);
+    // for (int i = 0; i < word_count; i++) {
+    //   temp = letters_extraction(image, list_left, list_right,
+    //   words[i].top_bound,
+    //                             words[i].bottom_bound, 1, i);
 
-  // Resize cells
-  // cells_resize(num_rows, num_cols);
+    //   // Resize the letters
+    //   letters_resize(i, temp);
+    // }
 
-  // Clean up
-  SDL_FreeSurface(image);
-  SDL_Quit();
-  return 0;
+    // Display the image
+    display_image(image);
+
+    // Save the SDL surfare to .png`
+    save_image(image, "output/output.png");
+
+    // Split the image into smaller images
+    // split_grid_into_images(image, grid_left, grid_top, grid_right,
+    // grid_bottom, num_rows, num_cols);
+
+    // Resize cells
+    // cells_resize(num_rows, num_cols);
+
+    // Clean up
+    SDL_FreeSurface(image);
+    SDL_Quit();
+    return 0;
+  } else if (argc == 3) { // rotate function
+    printf("Rotate function\n");
+    const char *IMAGE = argv[1];
+    const char *ANGLE = argv[2];
+
+    rotate(IMAGE, "output/rotated.png", atof(ANGLE));
+
+    return 0;
+  }
 }
