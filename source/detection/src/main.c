@@ -30,7 +30,8 @@ void image_parameter(const char *inputPath, SDL_Surface *surface,
 int main(int argc, char *argv[]) {
   printf("argc: %d\n", argc);
   if (argc < 2 || argc > 3) {
-    printf("Usage: %s <image_path> or %s <image_path> <angle>\n", argv[0], argv[0]);
+    printf("Usage: %s <image_path> or %s <image_path> <angle>\n", argv[0],
+           argv[0]);
     return 1;
   } else if (argc == 2) { // grid detection function
     printf("Grid detection\n");

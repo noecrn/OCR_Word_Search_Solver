@@ -1,10 +1,10 @@
+#include "../include/image_processing.h"
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <err.h>
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include "../include/image_processing.h"
 
 // function to display image on the screen
 void display_image(SDL_Surface *image) {
