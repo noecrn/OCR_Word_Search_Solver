@@ -22,12 +22,13 @@ Ce projet consiste à développer une application capable de résoudre une grill
    ```
    git clone git@github.com:noecrn/OCR_Word_Search_Solver.git
    cd OCR_Word_Search_Solver
-2. Compiler le projet avec le Makefile :
-   ```
-   make
 ## Utilisation
 ### Résolution d'une grille en ligne de commande
 L'application dispose d'un programme de ligne de commande `solver` qui permet de résoudre une grille de mots cachés :
+```
+cd source/solver
+make
+```
 ```
 ./solver <fichier_grille> <mot_a_trouver>
 ```
@@ -39,9 +40,53 @@ Exemple :
 $ ./solver grid.txt hello
 (9,8)(5,8)
 ```
+### Détection de la grille
+L'application dispose d'un programme de détection de la grille de mots cachés ainsi que de la liste de mots :
+```
+cd source/detection
+make
+```
+```
+./main <image_path> or ./main <image_path> <angle>
+```
+- `<image_path>` : Une image de mots cachés.
+- `<angle>` : L'angle de rotation.
+### Réseaux de neurones
+L'application dispose d'un réseaux de neurones pour reconnaître les lettres :
+```
+cd source/neural_network/nXOR
+make
+```
+```
+./nXOR_train
+./nXOR <1 or 0> <1 or 0>
+```
+- `<1 or 0>` : Input du non XOR.
+
+Exemple :
+```
+$ ./nXOR 1 1
+Output: 0.000000
+```
+### Filtres et pré-traitement
+L'application dispose de filtres :
+```
+cd source/pre_processe
+make
+```
+```
+./main <image_path>
+```
+- `<image_path>` : Une image de mots cachés.
 
 ### Interface graphique
 L'interface graphique permet de charger une image, de la prétraiter et de résoudre la grille de mots cachés. Elle offre également la possibilité d'enregistrer la grille résolue en tant qu'image.
+
+### Formatage du code
+Pour formater le code source de manière uniforme, vous pouvez utiliser la commande suivante :
+```
+make format
+```
 
 ## Format des fichiers
 Le fichier de la grille (`<fichier_grille>`) doit être un fichier texte contenant des caractères majuscules avec un minimum de 5 lignes et 5 colonnes.
