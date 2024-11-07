@@ -12,16 +12,7 @@ typedef struct {
 // Function to count black pixels on a line between two points
 int count_black_pixels_on_a_line(SDL_Surface *surface, int start, int end,
                                  int y, int x) {
-  // printf("count_black_pixels\n");
-
   int black_pixel_count = 0;
-
-  // printf("start: %d, end: %d\n", start, end);
-  // printf("y: %d, x: %d\n", y, x);
-
-  if (y == 733) {
-      printf("SF\n");
-  }
 
   if (x == -1) {
     for (int i = start; i <= end; i++) {
@@ -30,14 +21,11 @@ int count_black_pixels_on_a_line(SDL_Surface *surface, int start, int end,
         Uint8 r, g, b, a;
         SDL_GetRGBA(pixel, surface->format, &r, &g, &b, &a);
 
-        // printf("%d\n", i);
-
         if (is_black_pixel(r, g, b, 1)) {
           black_pixel_count++;
         }
       } else {
-        // printf("Error\n");
-	break;
+        break;
       }
     }
   } else if (y == -1) {
@@ -46,8 +34,6 @@ int count_black_pixels_on_a_line(SDL_Surface *surface, int start, int end,
         Uint32 pixel = ((Uint32 *)surface->pixels)[i * (surface->pitch / 4) + x];
         Uint8 r, g, b, a;
         SDL_GetRGBA(pixel, surface->format, &r, &g, &b, &a);
-
-        // printf("%d\n", i);
 
         if (is_black_pixel(r, g, b, 1)) {
           black_pixel_count++;
@@ -64,8 +50,6 @@ int count_black_pixels_on_a_line(SDL_Surface *surface, int start, int end,
 // Function to count words in the words list
 int count_words(SDL_Surface *surface, int list_left, int list_right,
                 int list_top, int list_bottom, int white_threshold) {
-	printf("count_words\n");
-
   int is_black = 0;
   int word_count = 0;
 
@@ -92,8 +76,6 @@ int count_words(SDL_Surface *surface, int list_left, int list_right,
 coordinates *words_extraction(SDL_Surface *surface, int list_left,
                               int list_right, int list_top, int list_bottom,
                               int white_threshold, int word_count) {
-	printf("words_extraction\n");
-
   coordinates *words_coordinates = malloc(word_count * sizeof(coordinates) + 1);
   if (words_coordinates == NULL) {
     printf("Error: malloc failed\n");
@@ -130,8 +112,6 @@ coordinates *words_extraction(SDL_Surface *surface, int list_left,
 int letters_extraction(SDL_Surface *surface, int list_left, int list_right,
                        int list_top, int list_bottom, int white_threshold,
                        int current_word) {
-	printf("letters_extraction\n");
-
   int is_black = 0;
   int letter_left_bound = list_left;
   int current_letter = 0;

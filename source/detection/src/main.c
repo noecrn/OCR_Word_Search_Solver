@@ -7,6 +7,8 @@
 #include "../include/rendering.h"
 #include "../include/words_extraction.h"
 #include "../include/words_list.h"
+#include <time.h>
+#include <stdio.h>
 
 // Function to get image parameters based on the input path
 void image_parameter(const char *inputPath, SDL_Surface *surface,
@@ -32,6 +34,8 @@ int main(int argc, char *argv[]) {
     printf("Usage: %s <image_path>\n", argv[0]);
     return 1;
   }
+
+  clock_t start_time = clock();
 
   const char *IMAGE = argv[1];
 
@@ -98,6 +102,11 @@ int main(int argc, char *argv[]) {
 
   // Resize cells
   cells_resize(num_rows, num_cols);
+
+  clock_t end_time = clock();
+  double execute_time = (double)(end_time - start_time) / CLOCKS_PER_SEC;
+
+  printf("Execution time: %f seconds\n", execute_time);
 
   // Clean up
   SDL_FreeSurface(image);
