@@ -7,6 +7,9 @@
 #include "../include/rendering.h"
 #include "../include/words_extraction.h"
 #include "../include/words_list.h"
+#include "../include/grid_detection.h"
+#include <stdio.h>
+#include <time.h>
 
 // Function to get image parameters based on the input path
 void image_parameter(const char *inputPath, SDL_Surface *surface,
@@ -28,14 +31,13 @@ void image_parameter(const char *inputPath, SDL_Surface *surface,
 }
 
 int main(int argc, char *argv[]) {
-  printf("argc: %d\n", argc);
   if (argc < 2 || argc > 3) {
     printf("Usage: %s <image_path> or %s <image_path> <angle>\n", argv[0],
            argv[0]);
     return 1;
   } else if (argc == 2) { // grid detection function
-    printf("Grid detection\n");
     const char *IMAGE = argv[1];
+    clock_t start_time = clock();
 
     // Initialize SDL
     SDL_Init(SDL_INIT_VIDEO);
@@ -72,41 +74,47 @@ int main(int argc, char *argv[]) {
                     &list_left, &list_right, &list_top, &list_bottom, 15, 1, 0);
 
     // Count the number of words
-    // int word_count =
-    //     count_words(image, list_left, list_right, list_top, list_bottom, 0);
+    int word_count =
+        count_words(image, list_left, list_right, list_top, list_bottom, 0);
 
     // Extract the words list
-    // coordinates *words = words_extraction(image, list_left, list_right,
-    // list_top, list_bottom, 1, word_count);
+    coordinates *words = words_extraction(image, list_left, list_right,
+    list_top, list_bottom, 1, word_count);
 
     // Extract the letters
-    // int temp = 0;
+    int temp = 0;
 
-    // for (int i = 0; i < word_count; i++) {
-    //   temp = letters_extraction(image, list_left, list_right,
-    //   words[i].top_bound,
-    //                             words[i].bottom_bound, 1, i);
+    for (int i = 0; i < word_count; i++) {
+      temp = letters_extraction(image, list_left, list_right,
+      words[i].top_bound,
+                                words[i].bottom_bound, 1, i);
 
-    //   // Resize the letters
-    //   letters_resize(i, temp);
-    // }
-
-    // Display the image
-    display_image(image);
+      // Resize the letters
+      letters_resize(i, temp);
+    }
 
     // Save the SDL surfare to .png`
     save_image(image, "output/output.png");
 
     // Split the image into smaller images
-    // split_grid_into_images(image, grid_left, grid_top, grid_right,
-    // grid_bottom, num_rows, num_cols);
+    split_grid_into_images(image, grid_left, grid_top, grid_right,
+    grid_bottom, num_rows, num_cols);
 
     // Resize cells
-    // cells_resize(num_rows, num_cols);
+    cells_resize(num_rows, num_cols);
+
+    clock_t end_time = clock();
+    double execute_time = (double)(end_time - start_time) / CLOCKS_PER_SEC;
+
+    printf("Execution time: %f seconds\n", execute_time);
+
+    // Display the image
+    display_image(image);
 
     // Clean up
     SDL_FreeSurface(image);
     SDL_Quit();
+
     return 0;
   } else if (argc == 3) { // rotate function
     printf("Rotate function\n");

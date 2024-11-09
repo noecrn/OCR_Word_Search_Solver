@@ -2,6 +2,7 @@
 #include "../include/lettre_extraction.h"
 #include "../include/rendering.h"
 #include <SDL2/SDL.h>
+#include <stdio.h>
 
 typedef struct {
   int top_bound;
@@ -13,31 +14,30 @@ int count_black_pixels_on_a_line(SDL_Surface *surface, int start, int end,
                                  int y, int x) {
   int black_pixel_count = 0;
 
-  printf("start: %d, end: %d\n", start, end);
-  printf("y: %d, x: %d\n", y, x);
-
   if (x == -1) {
     for (int i = start; i <= end; i++) {
-      Uint32 pixel = ((Uint32 *)surface->pixels)[y * (surface->pitch / 4) + i];
-      Uint8 r, g, b, a;
-      SDL_GetRGBA(pixel, surface->format, &r, &g, &b, &a);
-
-      printf("%d\n", i);
-
-      if (is_black_pixel(r, g, b, 1)) {
-        black_pixel_count++;
+      if (y >= 0 && y < surface->h && i >= 0 && i < surface->w) {
+        Uint32 pixel = ((Uint32 *)surface->pixels)[y * (surface->pitch / 4) + i];
+        Uint8 r, g, b, a;
+        SDL_GetRGBA(pixel, surface->format, &r, &g, &b, &a);
+        if (is_black_pixel(r, g, b, 1)) {
+          black_pixel_count++;
+        }
+      } else {
+        break;
       }
     }
   } else if (y == -1) {
     for (int i = start; i <= end; i++) {
-      Uint32 pixel = ((Uint32 *)surface->pixels)[i * (surface->pitch / 4) + x];
-      Uint8 r, g, b, a;
-      SDL_GetRGBA(pixel, surface->format, &r, &g, &b, &a);
-
-      printf("%d\n", i);
-
-      if (is_black_pixel(r, g, b, 1)) {
-        black_pixel_count++;
+      if (x >= 0 && x < surface->h && i >= 0 && i < surface->w) {
+        Uint32 pixel = ((Uint32 *)surface->pixels)[i * (surface->pitch / 4) + x];
+        Uint8 r, g, b, a;
+        SDL_GetRGBA(pixel, surface->format, &r, &g, &b, &a);
+        if (is_black_pixel(r, g, b, 1)) {
+          black_pixel_count++;
+        }
+      } else {
+	break;
       }
     }
   }
