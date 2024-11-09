@@ -88,7 +88,12 @@ int detect_grid(SDL_Surface *surface) {
   int Width = surface->w;
 
   // Initialize the visited array
-  int visited[Height * Width];
+  int *visited = malloc(Height * Width * sizeof(int));
+  if (visited == NULL) {
+    printf("Mallof failed\n");
+    return -1;
+  }
+
   for (int i = 0; i < Height * Width; i++) {
     visited[i] = 0;
   }
