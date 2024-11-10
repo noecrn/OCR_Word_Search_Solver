@@ -1,5 +1,5 @@
 CC = gcc -D__NO_INLINE__
-CFLAGS = -Wall -Wextra -O3
+CFLAGS = -Wall -Wextra -O3 -g
 LIBS = -lm
 
 # OS-specific configuration

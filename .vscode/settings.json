@@ -19,7 +19,8 @@
     "algorithm": "c",
     "bit": "c",
     "vector": "c",
-    "lettre_extraction.h": "c"
+    "lettre_extraction.h": "c",
+    "grid_detection.h": "c"
   },
   "C_Cpp_Runner.msvcBatchPath": "",
   "C_Cpp.errorSquiggles": "disabled"
