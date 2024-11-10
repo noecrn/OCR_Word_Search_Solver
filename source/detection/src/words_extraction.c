@@ -17,7 +17,8 @@ int count_black_pixels_on_a_line(SDL_Surface *surface, int start, int end,
   if (x == -1) {
     for (int i = start; i <= end; i++) {
       if (y >= 0 && y < surface->h && i >= 0 && i < surface->w) {
-        Uint32 pixel = ((Uint32 *)surface->pixels)[y * (surface->pitch / 4) + i];
+        Uint32 pixel =
+            ((Uint32 *)surface->pixels)[y * (surface->pitch / 4) + i];
         Uint8 r, g, b, a;
         SDL_GetRGBA(pixel, surface->format, &r, &g, &b, &a);
         if (is_black_pixel(r, g, b, 1)) {
@@ -30,14 +31,15 @@ int count_black_pixels_on_a_line(SDL_Surface *surface, int start, int end,
   } else if (y == -1) {
     for (int i = start; i <= end; i++) {
       if (x >= 0 && x < surface->h && i >= 0 && i < surface->w) {
-        Uint32 pixel = ((Uint32 *)surface->pixels)[i * (surface->pitch / 4) + x];
+        Uint32 pixel =
+            ((Uint32 *)surface->pixels)[i * (surface->pitch / 4) + x];
         Uint8 r, g, b, a;
         SDL_GetRGBA(pixel, surface->format, &r, &g, &b, &a);
         if (is_black_pixel(r, g, b, 1)) {
           black_pixel_count++;
         }
       } else {
-	break;
+        break;
       }
     }
   }

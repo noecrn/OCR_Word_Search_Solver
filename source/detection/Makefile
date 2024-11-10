@@ -2,6 +2,13 @@ CC = gcc -D__NO_INLINE__
 CFLAGS = -Wall -Wextra -O3 -g
 LIBS = -lm
 
+# Check if we want to build with ASan or Valgrind
+ifdef ASAN
+    CFLAGS += -fsanitize=address
+else
+    CFLAGS += -DNo_SANITIZE
+endif
+
 # OS-specific configuration
 UNAME_S := $(shell uname -s)
 
@@ -54,3 +61,11 @@ clean:
 
 format:
 	clang-format -i $(wildcard $(SRC_DIRS:=/*.c) $(INCLUDE_DIRS:=/*.h))
+
+# Add new targets for specific builds
+asan: clean
+	$(MAKE) ASAN=1
+
+valgrind: clean all
+
+.PHONY: all clean format asan valgrind

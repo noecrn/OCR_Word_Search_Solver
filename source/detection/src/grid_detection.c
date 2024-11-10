@@ -43,8 +43,8 @@ int propagate_and_count(SDL_Surface *surface, int x, int y, int Height,
   }
 
   // Mark the pixel as visited
-  if (y * Width + x )
-  visited[y * Width + x] = 1;
+  if (y * Width + x)
+    visited[y * Width + x] = 1;
   int count = 1;
 
   // Propagate to the 8 neighbors
