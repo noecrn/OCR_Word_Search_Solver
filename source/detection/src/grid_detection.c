@@ -43,8 +43,8 @@ int propagate_and_count(SDL_Surface *surface, int x, int y, int Height,
   }
 
   // Mark the pixel as visited
-  if (y * Width + x )
-  visited[y * Width + x] = 1;
+  if (y * Width + x)
+    visited[y * Width + x] = 1;
   int count = 1;
 
   // Propagate to the 8 neighbors
@@ -64,33 +64,42 @@ int propagate_and_count(SDL_Surface *surface, int x, int y, int Height,
 // Function to count the number of black pixels
 int count_pixels(SDL_Surface *surface, int *visited, int Height, int Width,
                  int start_x, int start_y) {
-  // Loop through all the pixels
-  for (int y = start_y; y < Height; y++) {
-    for (int x = start_x; x < Width; x++) {
-      // Get the pixel color
-      Uint32 pixel = get_pixel_color(surface, x, y);
+    printf("[DEBUG] Counting pixels from (%d,%d)\n", start_x, start_y);
+    int max_count = 0;
+    // Loop through all the pixels
+    for (int y = start_y; y < Height; y++) {
+        for (int x = start_x; x < Width; x++) {
+            // Get the pixel color
+            Uint32 pixel = get_pixel_color(surface, x, y);
 
-      // If the pixel is black and has not been visited, propagate
-      if (is_pixel_black(pixel, surface) && !visited[y * Width + x]) {
-        int count = propagate_and_count(surface, x, y, Height, Width, visited);
-        return count;
-      }
+            // If the pixel is black and has not been visited, propagate
+            if (is_pixel_black(pixel, surface) && !visited[y * Width + x]) {
+                int count = propagate_and_count(surface, x, y, Height, Width, visited);
+                if (count > max_count) {
+                    max_count = count;
+                }
+            }
+        }
+        // Reset start_x for next row
+        start_x = 0;
     }
-  }
-
-  return -1;
+    
+    printf("[DEBUG] Found component of size: %d\n", max_count);
+    return max_count;  // Return the largest connected component found
 }
 
 // Function return the size of the biggest black pixels amount
 int detect_grid(SDL_Surface *surface) {
+  printf("[DEBUG] Starting grid detection...\n");
   // Get the image dimensions
   int Height = surface->h;
   int Width = surface->w;
+  printf("[DEBUG] Image dimensions: %dx%d\n", Width, Height);
 
   // Initialize the visited array
   int *visited = malloc(Height * Width * sizeof(int));
   if (visited == NULL) {
-    printf("Mallof failed\n");
+    printf("[DEBUG] Memory allocation failed\n");
     return -1;
   }
 
@@ -117,5 +126,10 @@ int detect_grid(SDL_Surface *surface) {
     }
   }
 
-  return max_count > 5000;
+  printf("[DEBUG] Max black pixel count: %d\n", max_count);
+  printf("[DEBUG] Grid detection threshold: 2000\n");
+  printf("[DEBUG] Grid detected: %s\n", max_count > 2000 ? "yes" : "no");
+  
+  free(visited);
+  return max_count > 2000;  // Lowered threshold from 5000 to 2000
 }

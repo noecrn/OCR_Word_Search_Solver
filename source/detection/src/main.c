@@ -1,5 +1,7 @@
 #include "../include/border_dilatation.h"
 #include "../include/bounding_boxes.h"
+#include "../include/grid_detection.h"
+#include "../include/hough_transform.h"
 #include "../include/image_loader.h"
 #include "../include/image_processing.h"
 #include "../include/lettre_extraction.h"
@@ -7,8 +9,6 @@
 #include "../include/rendering.h"
 #include "../include/words_extraction.h"
 #include "../include/words_list.h"
-#include "../include/grid_detection.h"
-#include "../include/hough_transform.h"
 #include <stdio.h>
 #include <time.h>
 
@@ -44,11 +44,11 @@ int no_grid_detection(SDL_Surface *image, const char *IMAGE) {
 
   // Adjust the borders
   check_and_dilate_borders(image, &grid_left, &grid_right, &grid_top,
-                            &grid_bottom);
+                           &grid_bottom);
 
   // Count the number of rows and columns
   analyze_grid(image, &grid_left, &grid_right, &grid_top, &grid_bottom,
-                &num_cols, &num_rows);
+               &num_cols, &num_rows);
 
   // Draw the grid
   draw_grid(image, grid_left, grid_right, grid_top, grid_bottom, num_rows,
@@ -63,15 +63,14 @@ int no_grid_detection(SDL_Surface *image, const char *IMAGE) {
       count_words(image, list_left, list_right, list_top, list_bottom, 0);
 
   // Extract the words list
-  coordinates *words = words_extraction(image, list_left, list_right,
-  list_top, list_bottom, 1, word_count);
+  coordinates *words = words_extraction(image, list_left, list_right, list_top,
+                                        list_bottom, 1, word_count);
 
   // Extract the letters
   int temp = 0;
 
   for (int i = 0; i < word_count; i++) {
-    temp = letters_extraction(image, list_left, list_right,
-    words[i].top_bound,
+    temp = letters_extraction(image, list_left, list_right, words[i].top_bound,
                               words[i].bottom_bound, 1, i);
 
     // Resize the letters
@@ -82,8 +81,8 @@ int no_grid_detection(SDL_Surface *image, const char *IMAGE) {
   save_image(image, "output/output.png");
 
   // Split the image into smaller images
-  split_grid_into_images(image, grid_left, grid_top, grid_right,
-  grid_bottom, num_rows, num_cols);
+  split_grid_into_images(image, grid_left, grid_top, grid_right, grid_bottom,
+                         num_rows, num_cols);
 
   // Resize cells
   cells_resize(num_rows, num_cols);
@@ -98,7 +97,7 @@ int no_grid_detection(SDL_Surface *image, const char *IMAGE) {
   return 0;
 }
 
-int with_grid_detection (SDL_Surface *image) {
+int with_grid_detection(SDL_Surface *image) {
   GridCoords coordinates = detect_grid_coords(image);
 
   if (coordinates.left == 0 && coordinates.right == 0 && coordinates.top == 0 &&
@@ -116,7 +115,7 @@ int with_grid_detection (SDL_Surface *image) {
     draw_line(image, -1, coordinates.bottom, red);
 
     // Save the SDL surfare to .png
-    save_image(image, "output/output_.png");
+    save_image(image, "output/output.png");
 
     return 1;
   }
@@ -134,6 +133,14 @@ int main(int argc, char *argv[]) {
   } else if (argc == 2) { // grid detection function
     const char *IMAGE = argv[1];
 
+    // Try to load the image first to check if it exists
+    SDL_Surface *test_image = IMG_Load(IMAGE);
+    if (!test_image) {
+        printf("Error: Could not load image '%s': %s\n", IMAGE, IMG_GetError());
+        return 1;
+    }
+    SDL_FreeSurface(test_image);
+
     // Initialize SDL
     SDL_Init(SDL_INIT_VIDEO);
 
@@ -145,9 +152,16 @@ int main(int argc, char *argv[]) {
 
     // Check if a grid is detected in the image
     if (detect_grid(image) == 0) {
+      printf("[DEBUG] Using no_grid_detection method\n");
       no_grid_detection(image, IMAGE);
     } else {
-      with_grid_detection(image);
+      printf("[DEBUG] Attempting Hough transform detection\n");
+      if (with_grid_detection(image) == 0) {
+        printf("[DEBUG] Hough transform failed to detect grid. Stopping.\n");
+        SDL_FreeSurface(image);
+        SDL_Quit();
+        return 1;
+      }
     }
   } else if (argc == 3) { // rotate function
     printf("Rotate function\n");
