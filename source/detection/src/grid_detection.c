@@ -21,6 +21,12 @@ typedef struct {
   int y;
 } Pixel;
 
+// Add new struct to store component info
+typedef struct {
+    int *pixels;
+    int size;
+} Component;
+
 // Function to check if a pixel is in the grid
 int is_pixel_in_grid(int x, int y, int Height, int Width) {
   return (x >= 0 && x < Width && y >= 0 && y < Height);
@@ -28,7 +34,7 @@ int is_pixel_in_grid(int x, int y, int Height, int Width) {
 
 // Recursive function to propagate and count black pixels
 int propagate_and_count(SDL_Surface *surface, int x, int y, int Height,
-                        int Width, int *visited) {
+                        int Width, int *visited, int *component) {
   // Check if the pixel is in the grid and has not been visited
   if (!is_pixel_in_grid(x, y, Height, Width) || visited[y * Width + x]) {
     return 0;
@@ -45,6 +51,9 @@ int propagate_and_count(SDL_Surface *surface, int x, int y, int Height,
   // Mark the pixel as visited
   if (y * Width + x)
     visited[y * Width + x] = 1;
+  if (component) {
+    component[y * Width + x] = 1;
+  }
   int count = 1;
 
   // Propagate to the 8 neighbors
@@ -55,37 +64,51 @@ int propagate_and_count(SDL_Surface *surface, int x, int y, int Height,
   for (int i = 0; i < 8; i++) {
     int new_x = x + directions[i].x;
     int new_y = y + directions[i].y;
-    count += propagate_and_count(surface, new_x, new_y, Height, Width, visited);
+    count += propagate_and_count(surface, new_x, new_y, Height, Width, visited, component);
   }
 
   return count;
 }
 
 // Function to count the number of black pixels
-int count_pixels(SDL_Surface *surface, int *visited, int Height, int Width,
+Component count_pixels(SDL_Surface *surface, int *visited, int Height, int Width,
                  int start_x, int start_y) {
     printf("[DEBUG] Counting pixels from (%d,%d)\n", start_x, start_y);
-    int max_count = 0;
-    // Loop through all the pixels
+    Component largest = {NULL, 0};
+    int *current_component = calloc(Height * Width, sizeof(int));
+    
+    if (!current_component) {
+        printf("[DEBUG] Memory allocation failed\n");
+        return largest;
+    }
+
     for (int y = start_y; y < Height; y++) {
         for (int x = start_x; x < Width; x++) {
-            // Get the pixel color
             Uint32 pixel = get_pixel_color(surface, x, y);
 
-            // If the pixel is black and has not been visited, propagate
             if (is_pixel_black(pixel, surface) && !visited[y * Width + x]) {
-                int count = propagate_and_count(surface, x, y, Height, Width, visited);
-                if (count > max_count) {
-                    max_count = count;
+                memset(current_component, 0, Height * Width * sizeof(int));
+                int count = propagate_and_count(surface, x, y, Height, Width, visited, current_component);
+                
+                if (count > largest.size) {
+                    if (largest.pixels) {
+                        free(largest.pixels);
+                    }
+                    largest.pixels = current_component;
+                    largest.size = count;
+                    current_component = calloc(Height * Width, sizeof(int));
+                    if (!current_component) {
+                        printf("[DEBUG] Memory allocation failed\n");
+                        return largest;
+                    }
                 }
             }
         }
-        // Reset start_x for next row
         start_x = 0;
     }
-    
-    printf("[DEBUG] Found component of size: %d\n", max_count);
-    return max_count;  // Return the largest connected component found
+
+    free(current_component);
+    return largest;
 }
 
 // Function return the size of the biggest black pixels amount
@@ -107,29 +130,24 @@ int detect_grid(SDL_Surface *surface) {
     visited[i] = 0;
   }
 
-  int max_count = 0;
-
-  // Loop through all the pixels
-  for (int y = 0; y < Height; y++) {
-    for (int x = 0; x < Width; x++) {
-      // printf("%d, %d", x, y);
-      // Get the pixel color
-      Uint32 pixel = get_pixel_color(surface, x, y);
-
-      // If the pixel is black and has not been visited, propagate
-      if (is_pixel_black(pixel, surface) && !visited[y * Width + x]) {
-        int count = count_pixels(surface, visited, Height, Width, x, y);
-        if (count > max_count) {
-          max_count = count;
-        }
+  Component largest = count_pixels(surface, visited, Height, Width, 0, 0);
+    
+  // Color the largest component in red
+  if (largest.pixels) {
+      for (int y = 0; y < Height; y++) {
+          for (int x = 0; x < Width; x++) {
+              if (largest.pixels[y * Width + x]) {
+                  Uint32 red = SDL_MapRGB(surface->format, 255, 0, 0);
+                  ((Uint32 *)surface->pixels)[y * Width + x] = red;
+              }
+          }
       }
-    }
+      
+      // Save the image with colored component
+      SDL_SaveBMP(surface, "output/largest_component.png");
+      free(largest.pixels);
   }
 
-  printf("[DEBUG] Max black pixel count: %d\n", max_count);
-  printf("[DEBUG] Grid detection threshold: 2000\n");
-  printf("[DEBUG] Grid detected: %s\n", max_count > 2000 ? "yes" : "no");
-  
   free(visited);
-  return max_count > 2000;  // Lowered threshold from 5000 to 2000
+  return largest.size > 2000;  // Lowered threshold from 5000 to 2000
 }
