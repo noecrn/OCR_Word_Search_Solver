@@ -32,42 +32,77 @@ int is_pixel_in_grid(int x, int y, int Height, int Width) {
   return (x >= 0 && x < Width && y >= 0 && y < Height);
 }
 
-// Recursive function to propagate and count black pixels
+// Helper function to check if any pixel in a smaller area is black
+int check_nearby_pixels(SDL_Surface *surface, int x, int y, int Height, int Width) {
+    // Check the current pixel first
+    if (is_pixel_in_grid(x, y, Height, Width)) {
+        Uint32 pixel = get_pixel_color(surface, x, y);
+        if (is_pixel_black(pixel, surface)) {
+            return 1;
+        }
+    }
+    
+    // Only check immediate adjacent pixels (cross pattern)
+    const Pixel directions[] = {
+        {0, -1},  // up
+        {-1, 0},  // left
+        {1, 0},   // right
+        {0, 1}    // down
+    };
+    
+    for (int i = 0; i < 4; i++) {
+        int new_x = x + directions[i].x;
+        int new_y = y + directions[i].y;
+        
+        if (is_pixel_in_grid(new_x, new_y, Height, Width)) {
+            Uint32 pixel = get_pixel_color(surface, new_x, new_y);
+            if (is_pixel_black(pixel, surface)) {
+                return 1;
+            }
+        }
+    }
+    return 0;
+}
+
+// Modified propagate_and_count function to only check immediate neighbors
 int propagate_and_count(SDL_Surface *surface, int x, int y, int Height,
                         int Width, int *visited, int *component) {
-  // Check if the pixel is in the grid and has not been visited
-  if (!is_pixel_in_grid(x, y, Height, Width) || visited[y * Width + x]) {
-    return 0;
-  }
+    if (!is_pixel_in_grid(x, y, Height, Width) || visited[y * Width + x]) {
+        return 0;
+    }
 
-  // Get the pixel color
-  Uint32 pixel = get_pixel_color(surface, x, y);
+    // Check if current pixel or any adjacent pixels are black
+    if (!check_nearby_pixels(surface, x, y, Height, Width)) {
+        return 0;
+    }
 
-  // If the pixel is not black, return 0
-  if (!is_pixel_black(pixel, surface)) {
-    return 0;
-  }
-
-  // Mark the pixel as visited
-  if (y * Width + x)
+    // Mark the pixel as visited
     visited[y * Width + x] = 1;
-  if (component) {
-    component[y * Width + x] = 1;
-  }
-  int count = 1;
+    if (component) {
+        component[y * Width + x] = 1;
+    }
+    int count = 1;
 
-  // Propagate to the 8 neighbors
-  Pixel directions[] = {{-1, -1}, {0, -1}, {1, -1}, {-1, 0},
-                        {1, 0},   {-1, 1}, {0, 1},  {1, 1}};
+    // Only propagate to immediate neighbors (cross pattern)
+    const Pixel directions[] = {
+        {0, -1},  // up
+        {-1, 0},  // left
+        {1, 0},   // right
+        {0, 1},   // down
+        {1, -1},  // up-right
+        {-1, -1}, // up-left
+        {1, 1},   // down-right
+        {-1, 1}   // down-left
 
-  // Propagate to the neighbors
-  for (int i = 0; i < 8; i++) {
-    int new_x = x + directions[i].x;
-    int new_y = y + directions[i].y;
-    count += propagate_and_count(surface, new_x, new_y, Height, Width, visited, component);
-  }
+    };
 
-  return count;
+    for (int i = 0; i < 4; i++) {
+        int new_x = x + directions[i].x;
+        int new_y = y + directions[i].y;
+        count += propagate_and_count(surface, new_x, new_y, Height, Width, visited, component);
+    }
+
+    return count;
 }
 
 // Function to count the number of black pixels
