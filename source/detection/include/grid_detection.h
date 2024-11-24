@@ -5,6 +5,7 @@
 
 Uint32 get_pixel_color(SDL_Surface *surface, int x, int y);
 int is_pixel_black(Uint32 pixel, SDL_Surface *surface);
+int is_pixel_red(Uint32 pixel, SDL_Surface *surface);
 int is_pixel_in_grid(int x, int y, int Height, int Width);
 int propagate_and_count(SDL_Surface *surface, int x, int y, int Height,
                         int Width, int *visited);

@@ -1,4 +1,3 @@
-#include <dirent.h>
 #include "../include/border_dilatation.h"
 #include "../include/bounding_boxes.h"
 #include "../include/grid_detection.h"
@@ -10,6 +9,7 @@
 #include "../include/rendering.h"
 #include "../include/words_extraction.h"
 #include "../include/words_list.h"
+#include <dirent.h>
 #include <stdio.h>
 #include <time.h>
 
@@ -100,31 +100,31 @@ cleanup:
     return success;
 }
 
-int with_grid_detection(SDL_Surface *image) {
-  GridCoords coordinates = detect_grid_coords(image);
+// int with_grid_detection(SDL_Surface *image) {
+//   GridCoords coordinates = process_red_pixels(image);
 
-  if (coordinates.left == 0 && coordinates.right == 0 && coordinates.top == 0 &&
-      coordinates.bottom == 0) {
-    printf("No grid detected\n");
-    return 0;
-  } else {
-    printf("Grid detected\n");
+//   if (coordinates.left == 0 && coordinates.right == 0 && coordinates.top == 0 &&
+//       coordinates.bottom == 0) {
+//     printf("No grid detected\n");
+//     return 0;
+//   } else {
+//     printf("Grid detected\n");
 
-    // Display the grid
-    SDL_Color red = {255, 0, 0, 255};
-    draw_line(image, coordinates.left, -1, red);
-    draw_line(image, coordinates.right, -1, red);
-    draw_line(image, -1, coordinates.top, red);
-    draw_line(image, -1, coordinates.bottom, red);
+//     // Display the grid
+//     SDL_Color red = {255, 0, 0, 255};
+//     draw_line(image, coordinates.left, -1, red);
+//     draw_line(image, coordinates.right, -1, red);
+//     draw_line(image, -1, coordinates.top, red);
+//     draw_line(image, -1, coordinates.bottom, red);
 
-    // Save the SDL surfare to .png
-    save_image(image, "output/output.png");
+//     // Save the SDL surfare to .png
+//     save_image(image, "output/output.png");
 
-    return 1;
-  }
+//     return 1;
+//   }
 
-  return 0;
-}
+//   return 0;
+// }
 
 // Add test suite function
 void run_test_suite() {
@@ -182,9 +182,9 @@ void run_test_suite() {
                 SDL_FreeSurface(image_surface);
             } else {
                 printf("[DEBUG] Attempting Hough transform detection\n");
-                if (with_grid_detection(image_surface) == 1) {
-                    successful_tests++;
-                }
+                // if (with_grid_detection(image_surface) == 1) {
+                //     successful_tests++;
+                // }
                 SDL_FreeSurface(image_surface);
             }
 
@@ -256,12 +256,13 @@ int main(int argc, char *argv[]) {
             no_grid_detection(image, IMAGE);
         } else {
             printf("[DEBUG] Attempting Hough transform detection\n");
-            if (with_grid_detection(image) == 0) {
-                printf("[DEBUG] Hough transform failed to detect grid. Stopping.\n");
-                SDL_FreeSurface(image);
-                SDL_Quit();
-                return 1;
-            }
+            process_red_pixels(image);
+            // if (with_grid_detection(image) == 0) {
+            //     printf("[DEBUG] Hough transform failed to detect grid. Stopping.\n");
+            //     SDL_FreeSurface(image);
+            //     SDL_Quit();
+            //     return 1;
+            // }
         }
     }
     else if (argc == 3) {

@@ -1,6 +1,6 @@
 #include <SDL2/SDL.h>
 
-#define THRESHOLD 30
+#define ENABLE_RED_HIGHLIGHT 1  // Set to 0 to disable red highlighting
 
 // Function to get pixel color
 Uint32 get_pixel_color(SDL_Surface *surface, int x, int y) {
@@ -12,7 +12,22 @@ Uint32 get_pixel_color(SDL_Surface *surface, int x, int y) {
 int is_pixel_black(Uint32 pixel, SDL_Surface *surface) {
   Uint8 r, g, b;
   SDL_GetRGB(pixel, surface->format, &r, &g, &b);
-  return (r < THRESHOLD && g < THRESHOLD && b < THRESHOLD);
+  // Check for black pixels
+  if (r < 10 && g < 10 && b < 10) {
+    return 1;
+  }
+  return 0;
+}
+
+// If the pixel is red, return 1, else return 0
+int is_pixel_red(Uint32 pixel, SDL_Surface *surface) {
+  Uint8 r, g, b;
+  SDL_GetRGB(pixel, surface->format, &r, &g, &b);
+  // Check for red pixels (high red, low green and blue)
+  if (r > 200 && g < 10 && b < 10) {
+    return 1;
+  }
+  return 0;
 }
 
 // Struct to store pixel coordinates
@@ -37,7 +52,7 @@ int check_nearby_pixels(SDL_Surface *surface, int x, int y, int Height, int Widt
     // Check the current pixel first
     if (is_pixel_in_grid(x, y, Height, Width)) {
         Uint32 pixel = get_pixel_color(surface, x, y);
-        if (is_pixel_black(pixel, surface)) {
+        if (is_pixel_black(pixel, surface)) { // Now checks for red
             return 1;
         }
     }
@@ -56,7 +71,7 @@ int check_nearby_pixels(SDL_Surface *surface, int x, int y, int Height, int Widt
         
         if (is_pixel_in_grid(new_x, new_y, Height, Width)) {
             Uint32 pixel = get_pixel_color(surface, new_x, new_y);
-            if (is_pixel_black(pixel, surface)) {
+            if (is_pixel_black(pixel, surface)) { // Now checks for red
                 return 1;
             }
         }
@@ -67,12 +82,17 @@ int check_nearby_pixels(SDL_Surface *surface, int x, int y, int Height, int Widt
 // Modified propagate_and_count function to only check immediate neighbors
 int propagate_and_count(SDL_Surface *surface, int x, int y, int Height,
                         int Width, int *visited, int *component) {
+    static int propagation_depth = 0;
+    propagation_depth++;
+
     if (!is_pixel_in_grid(x, y, Height, Width) || visited[y * Width + x]) {
+        propagation_depth--;
         return 0;
     }
 
     // Check if current pixel or any adjacent pixels are black
     if (!check_nearby_pixels(surface, x, y, Height, Width)) {
+        propagation_depth--;
         return 0;
     }
 
@@ -102,13 +122,13 @@ int propagate_and_count(SDL_Surface *surface, int x, int y, int Height,
         count += propagate_and_count(surface, new_x, new_y, Height, Width, visited, component);
     }
 
+    propagation_depth--;
     return count;
 }
 
 // Function to count the number of black pixels
 Component count_pixels(SDL_Surface *surface, int *visited, int Height, int Width,
                  int start_x, int start_y) {
-    printf("[DEBUG] Counting pixels from (%d,%d)\n", start_x, start_y);
     Component largest = {NULL, 0};
     int *current_component = calloc(Height * Width, sizeof(int));
     
@@ -148,11 +168,10 @@ Component count_pixels(SDL_Surface *surface, int *visited, int Height, int Width
 
 // Function return the size of the biggest black pixels amount
 int detect_grid(SDL_Surface *surface) {
-  printf("[DEBUG] Starting grid detection...\n");
+  printf("[DEBUG] Starting grid detection (looking for the biggest black component)...\n");
   // Get the image dimensions
   int Height = surface->h;
   int Width = surface->w;
-  printf("[DEBUG] Image dimensions: %dx%d\n", Width, Height);
 
   // Initialize the visited array
   int *visited = malloc(Height * Width * sizeof(int));
@@ -167,6 +186,8 @@ int detect_grid(SDL_Surface *surface) {
 
   Component largest = count_pixels(surface, visited, Height, Width, 0, 0);
     
+  #if ENABLE_RED_HIGHLIGHT
+  printf("[DEBUG GRID] Highlighting largest component in red\n");
   // Color the largest component in red
   if (largest.pixels) {
       for (int y = 0; y < Height; y++) {
@@ -180,9 +201,16 @@ int detect_grid(SDL_Surface *surface) {
       
       // Save the image with colored component
       SDL_SaveBMP(surface, "output/largest_component.png");
+      printf("[DEBUG GRID] Saved highlighted image to output/largest_component.png\n");
+  }
+  #endif
+
+  int result = largest.size > 2000;
+  printf("[DEBUG GRID] Grid detection result: %s (size: %d, threshold: 2000)\n", 
+           result ? "true" : "false", largest.size);
+  if (largest.pixels) {
       free(largest.pixels);
   }
-
   free(visited);
-  return largest.size > 2000;  // Lowered threshold from 5000 to 2000
+  return result;
 }
