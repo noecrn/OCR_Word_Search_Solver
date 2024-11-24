@@ -256,13 +256,20 @@ int main(int argc, char *argv[]) {
             no_grid_detection(image, IMAGE);
         } else {
             printf("[DEBUG] Attempting Hough transform detection\n");
-            process_red_pixels(image);
-            // if (with_grid_detection(image) == 0) {
-            //     printf("[DEBUG] Hough transform failed to detect grid. Stopping.\n");
-            //     SDL_FreeSurface(image);
-            //     SDL_Quit();
-            //     return 1;
-            // }
+            float rotation_angle = detect_grid_rotation(image);
+            
+            if (fabs(rotation_angle) > 1.0) {  // If rotation is significant (>1 degree)
+                printf("[DEBUG] Rotating image by %.2f degrees\n", -rotation_angle);
+                // Create temporary file for rotated image
+                rotate(IMAGE, "output/temp_rotated.png", -rotation_angle);
+                // Reload the rotated image
+                SDL_FreeSurface(image);
+                image = load_image("output/temp_rotated.png");
+                // Re-run grid detection on rotated image
+                // process_red_pixels(image);
+            }
+            
+            save_image(image, "output/final_grid.png");
         }
     }
     else if (argc == 3) {

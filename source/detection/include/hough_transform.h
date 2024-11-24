@@ -20,5 +20,6 @@ typedef struct {
 // GridCoords detect_grid_coords(SDL_Surface *image);
 void find_grid_lines(SDL_Surface *surface, int x, int y);
 void process_red_pixels(SDL_Surface *surface);
+float detect_grid_rotation(SDL_Surface *surface);
 
 #endif
