@@ -100,33 +100,6 @@ cleanup:
     return success;
 }
 
-// int with_grid_detection(SDL_Surface *image) {
-//   GridCoords coordinates = process_red_pixels(image);
-
-//   if (coordinates.left == 0 && coordinates.right == 0 && coordinates.top == 0 &&
-//       coordinates.bottom == 0) {
-//     printf("No grid detected\n");
-//     return 0;
-//   } else {
-//     printf("Grid detected\n");
-
-//     // Display the grid
-//     SDL_Color red = {255, 0, 0, 255};
-//     draw_line(image, coordinates.left, -1, red);
-//     draw_line(image, coordinates.right, -1, red);
-//     draw_line(image, -1, coordinates.top, red);
-//     draw_line(image, -1, coordinates.bottom, red);
-
-//     // Save the SDL surfare to .png
-//     save_image(image, "output/output.png");
-
-//     return 1;
-//   }
-
-//   return 0;
-// }
-
-// Add test suite function
 void run_test_suite() {
     char path[256];
     char temp_path[256];

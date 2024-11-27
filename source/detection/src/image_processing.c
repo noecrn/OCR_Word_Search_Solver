@@ -24,7 +24,7 @@ void display_image(SDL_Surface *image) {
   SDL_UpdateWindowSurface(window); // Mettre à jour l'affichage
 
   // Attendre 7 secondes avant de fermer
-  SDL_Delay(7000);
+  SDL_Delay(2000);
 
   SDL_DestroyWindow(window);
 }
@@ -66,7 +66,7 @@ void rotate(const char *inputPath, const char *outputPath, double angle) {
   }
 
   // Clear the renderer with a background color
-  SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255); // Black background
+  SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255); // Black background
   SDL_RenderClear(renderer);
 
   // Create a texture from the original surface
