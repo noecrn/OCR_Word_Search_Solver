@@ -9,6 +9,7 @@
 #include "../include/rendering.h"
 #include "../include/words_extraction.h"
 #include "../include/words_list.h"
+#include "../include/delete_grid.h"
 #include <dirent.h>
 #include <stdio.h>
 #include <time.h>
@@ -234,12 +235,12 @@ int main(int argc, char *argv[]) {
             if (fabs(rotation_angle) > 1.0) {  // If rotation is significant (>1 degree)
                 printf("[DEBUG] Rotating image by %.2f degrees\n", -rotation_angle);
                 // Create temporary file for rotated image
-                rotate(IMAGE, "output/temp_rotated.png", -rotation_angle);
+                rotate("output/largest_component.png", "output/temp_rotated.png", -rotation_angle);
                 // Reload the rotated image
                 SDL_FreeSurface(image);
                 image = load_image("output/temp_rotated.png");
-                // Re-run grid detection on rotated image
-                // process_red_pixels(image);
+                // Remove the grid from the rotated image
+                delete_grid(image);
             }
             
             save_image(image, "output/final_grid.png");
