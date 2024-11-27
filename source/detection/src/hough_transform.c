@@ -91,8 +91,8 @@ void find_grid_lines(SDL_Surface *surface, int x, int y) {
                 // Draw line if we found enough red pixels
                 printf("Found line at angle %d with %d red pixels (length %d)\n", 
                        deg, count, len);
-                draw_line_at_angle(surface, x, y, angle, len, 
-                                 SDL_MapRGB(surface->format, 0, 0, 255));
+                // draw_line_at_angle(surface, x, y, angle, len, 
+                //                  SDL_MapRGB(surface->format, 0, 0, 255));
                 break; // Move to next angle once we find a good line
             }
         }

@@ -239,10 +239,12 @@ int main(int argc, char *argv[]) {
                 // Reload the rotated image
                 SDL_FreeSurface(image);
                 image = load_image("output/temp_rotated.png");
-                // Remove the grid from the rotated image
-                delete_grid(image);
             }
             
+            // Remove the grid from the rotated image
+            delete_grid(image);
+            // Apply the grid detection again
+            no_grid_detection(image, IMAGE);
             save_image(image, "output/final_grid.png");
         }
     }

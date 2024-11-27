@@ -13,7 +13,7 @@ void delete_grid(SDL_Surface *surface) {
 			if (is_pixel_red(pixel, surface)) {
 				// Replace red pixel with white
 				Uint32 white = SDL_MapRGB(surface->format, 255, 255, 255);
-				put_pixel(surface, x, y, white);
+                  ((Uint32 *)surface->pixels)[y * Width + x] = white;
 			}
 		}
 	}
