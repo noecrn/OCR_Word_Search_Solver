@@ -227,6 +227,12 @@ int main(int argc, char *argv[]) {
         // Check if a grid is detected in the image
         if (detect_grid(image) == 0) {
             printf("[DEBUG] Using no_grid_detection method\n");
+            // Reload the image to not get the biggest component in red
+            SDL_FreeSurface(image);
+            // Resize the image        
+            resize_image(IMAGE, "output/temp_resized.png", 700);
+            // Reload the image
+            image = load_image("output/temp_resized.png");
             no_grid_detection(image, IMAGE);
         } else {
             printf("[DEBUG] Attempting Hough transform detection\n");

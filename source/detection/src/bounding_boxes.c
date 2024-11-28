@@ -74,7 +74,7 @@ void detect_letter_grid(SDL_Surface *surface, int *left_bound, int *right_bound,
 
     for (int x = start_x; x >= 0; x -= block_size) {
       int black_pixel_count = count_black_pixels_in_block(
-          surface, x, start_y, block_size, black_tolerance, 0);
+          surface, x, start_y, block_size, black_tolerance, 1);
 
       if (black_pixel_count >
           white_threshold) { // If there are enough black pixels
@@ -101,7 +101,7 @@ void detect_letter_grid(SDL_Surface *surface, int *left_bound, int *right_bound,
     consecutive_white_blocks = 0;
     for (int x = start_x; x < width; x += block_size) {
       int black_pixel_count = count_black_pixels_in_block(
-          surface, x, start_y, block_size, black_tolerance, 0);
+          surface, x, start_y, block_size, black_tolerance, 1);
 
       if (black_pixel_count >
           white_threshold) { // If there are enough black pixels
@@ -130,7 +130,7 @@ void detect_letter_grid(SDL_Surface *surface, int *left_bound, int *right_bound,
     consecutive_white_blocks = 0;
     for (int y = start_y; y >= 0; y -= block_size) {
       int black_pixel_count = count_black_pixels_in_block(
-          surface, start_x, y, block_size, black_tolerance, 0);
+          surface, start_x, y, block_size, black_tolerance, 1);
 
       if (black_pixel_count >
           white_threshold) { // If there are enough black pixels
@@ -156,7 +156,7 @@ void detect_letter_grid(SDL_Surface *surface, int *left_bound, int *right_bound,
     consecutive_white_blocks = 0;
     for (int y = start_y; y < height; y += block_size) {
       int black_pixel_count = count_black_pixels_in_block(
-          surface, start_x, y, block_size, black_tolerance, 0);
+          surface, start_x, y, block_size, black_tolerance, 1);
 
       if (black_pixel_count >
           white_threshold) { // If there are enough black pixels
