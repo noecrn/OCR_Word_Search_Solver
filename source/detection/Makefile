@@ -29,11 +29,19 @@ ifeq ($(OS),Windows_NT) # Windows
 endif
 
 # Source directories
-SRC_DIRS = src
+SRC_DIRS = src src/image src/detection src/extraction src/utils
 INCLUDE_DIRS = include
 
+# Add vpath to help Make find source files
+vpath %.c $(SRC_DIRS)
+vpath %.h $(INCLUDE_DIRS)
+
 # Find all .c files in the specified directories
-SRC = $(wildcard $(SRC_DIRS:=/*.c))
+SRC = main.c \
+      $(wildcard src/image/*.c) \
+      $(wildcard src/detection/*.c) \
+      $(wildcard src/extraction/*.c) \
+      $(wildcard src/utils/*.c)
 
 # Source, object, and executable definitions
 OBJ = $(SRC:.c=.o)
@@ -56,8 +64,11 @@ $(EXEC): $(OBJ)
 # Clean up build artifacts
 clean:
 	-rm -f $(OBJ) $(DEP) $(EXEC)
+	-rm -f output/*
 	-rm -f data/cells/*
 	-rm -f data/words/*
+	-rm -f ../data/cells/*
+	-rm -f ../data/words/*
 
 format:
 	clang-format -i $(wildcard $(SRC_DIRS:=/*.c) $(INCLUDE_DIRS:=/*.h))

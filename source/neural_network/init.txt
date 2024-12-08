@@ -1,0 +1,18 @@
+Nombre de layer fc:
+3
+Nombre de layer de convolution:
+7
+Nombre de pixels par layer convolution:
+900 3136 784 1152 288 256 64 
+Nombre de neurones par layer:
+64 32 26
+Nombre de filtre par layer:
+0 4 0 8 0 16 0
+Learning rate:
+0.001
+Nombre d'époque:
+100000000
+Nombre de log par train:
+2
+Nombre de save:
+15

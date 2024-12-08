@@ -11,6 +11,6 @@ int propagate_and_count(SDL_Surface *surface, int x, int y, int Height,
                         int Width, int *visited);
 int count_pixels(SDL_Surface *surface, int *visited, int Height, int Width,
                  int start_x, int start_y);
-int detect_grid(SDL_Surface *surface);
+int detect_grid(SDL_Surface *surface, int *biggest_component, int flag);
 
 #endif
