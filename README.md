@@ -18,11 +18,20 @@ Ce projet consiste à développer une application capable de résoudre une grill
 - Utiliser l'environnement de développement fourni par l'école (machines de l'EPITA).
 
 ## Installation
-1. Cloner le dépôt Git :
-   ```
-   git clone git@github.com:noecrn/OCR_Word_Search_Solver.git
-   cd OCR_Word_Search_Solver
+Cloner le dépôt Git :
+```
+git clone noe.cornu@git.forge.epita.fr:p/epita-prepa-computer-science/proj-s3-2028/epita-prepa-computer-science-proj-s3-2028-stg-CANA-Corp.git
+cd epita-prepa-computer-science-proj-s3-2028-stg-CANA-Corp
+```
 ## Utilisation
+### Interface graphique
+L'interface graphique permet de charger une image, de la prétraiter et de résoudre la grille de mots cachés. Elle offre également la possibilité d'enregistrer la grille résolue en tant qu'image.
+```
+make clean && make
+cd source/interface/
+./interface
+```
+<img width="912" alt="Screenshot 2024-12-08 at 16 50 01" src="https://github.com/user-attachments/assets/6b5a4258-852c-49b4-aff4-46b7948ee56c">
 ### Résolution d'une grille en ligne de commande
 L'application dispose d'un programme de ligne de commande `solver` qui permet de résoudre une grille de mots cachés :
 ```
@@ -30,58 +39,16 @@ cd source/solver
 make
 ```
 ```
-./solver <fichier_grille> <mot_a_trouver>
+./solver <grid_file> <word>
 ```
-- `<fichier_grille>` : Un fichier texte contenant une grille de caractères.
-- `<mot_a_trouver>` : Le mot à chercher dans la grille.
+- `<grid_file>` : Un fichier texte contenant une grille de caractères.
+- `<word>` : Le mot à chercher dans la grille.
 
 Exemple :
 ```
 $ ./solver grid.txt hello
 (9,8)(5,8)
 ```
-### Détection de la grille
-L'application dispose d'un programme de détection de la grille de mots cachés ainsi que de la liste de mots :
-```
-cd source/detection
-make
-```
-```
-./main <image_path> or ./main <image_path> <angle>
-```
-- `<image_path>` : Une image de mots cachés.
-- `<angle>` : L'angle de rotation.
-### Réseaux de neurones
-L'application dispose d'un réseaux de neurones pour reconnaître les lettres :
-```
-cd source/neural_network/nXOR
-make
-```
-```
-./nXOR_train
-./nXOR <1 or 0> <1 or 0>
-```
-- `<1 or 0>` : Input du non XOR.
-
-Exemple :
-```
-$ ./nXOR 1 1
-Output: 0.000000
-```
-### Filtres et pré-traitement
-L'application dispose de filtres :
-```
-cd source/pre_processe
-make
-```
-```
-./main <image_path>
-```
-- `<image_path>` : Une image de mots cachés.
-
-### Interface graphique
-L'interface graphique permet de charger une image, de la prétraiter et de résoudre la grille de mots cachés. Elle offre également la possibilité d'enregistrer la grille résolue en tant qu'image.
-
 ### Formatage du code
 Pour formater le code source de manière uniforme, vous pouvez utiliser la commande suivante :
 ```

@@ -1,5 +1,5 @@
 # Définir le compilateur et les options
-CC = gcc -fsanitize=address
+CC = gcc -D__NO_INLINE__
 LIBS = $(shell pkg-config --libs sdl2 SDL2_image) -lm
 CFLAGS = -Wall -Wextra -O3 $(shell pkg-config --cflags sdl2 SDL2_image)
 
@@ -24,5 +24,8 @@ $(EXEC2): $(SRC2)
 # Nettoyage des fichiers générés
 clean:
 	rm -f $(EXEC1) $(EXEC2)
+
+format:
+	clang-format -i *.c *.h
 
 # FIN
