@@ -20,8 +20,8 @@ Ce projet consiste à développer une application capable de résoudre une grill
 ## Installation
 Cloner le dépôt Git :
 ```
-git clone noe.cornu@git.forge.epita.fr:p/epita-prepa-computer-science/proj-s3-2028/epita-prepa-computer-science-proj-s3-2028-stg-CANA-Corp.git
-cd epita-prepa-computer-science-proj-s3-2028-stg-CANA-Corp
+git clone git@github.com:noecrn/OCR_Word_Search_Solver.git
+cd OCR_Word_Search_Solver
 ```
 ## Utilisation
 ### Interface graphique
